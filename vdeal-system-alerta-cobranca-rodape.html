@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V-Deal System Completo</title>
+<style>
+:root{
+  --black:#030303;
+  --black2:#080B12;
+  --yellow:#FFB000;
+  --yellow2:#FFD15C;
+  --white:#FFFFFF;
+  --ice:#F7F8FA;
+  --muted:#71717a;
+  --line:#E6E8EF;
+  --green:#22C55E;
+  --red:#EF4444;
+  --blue:#3B82F6;
+  --shadow:0 18px 50px rgba(15,23,42,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:linear-gradient(135deg,#f8fafc,#eceff5);
+  color:#111827;
+}
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:290px;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(255,176,0,.25),transparent 28%),
+    linear-gradient(180deg,#020202,#0b1020 55%,#030303);
+  color:white;
+  padding:24px 18px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:auto;
+  box-shadow:12px 0 45px rgba(0,0,0,.28);
+}
+.brand{display:flex;gap:12px;align-items:center;margin-bottom:24px}
+.logo{
+  width:48px;height:48px;border-radius:17px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--yellow),#fff2b8);
+  color:#050505;font-weight:1000;font-size:22px;
+  box-shadow:0 0 36px rgba(255,176,0,.45);
+}
+.brand h1{font-size:17px;margin:0}
+.brand p{font-size:12px;color:#cacad0;margin:4px 0 0}
+.nav-title{
+  color:#8f8f96;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:11px;
+  font-weight:900;
+  margin:22px 12px 8px;
+}
+.nav{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#d7d7dc;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:16px;
+  cursor:pointer;
+  font-weight:800;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  transition:.22s ease;
+}
+.nav:hover,.nav.active{
+  color:var(--yellow);
+  background:rgba(255,176,0,.12);
+  transform:translateX(4px);
+  box-shadow:inset 4px 0 0 var(--yellow);
+}
+.main{flex:1;padding:28px;overflow:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+.topbar h2{font-size:28px;margin:0}
+.topbar p{margin:5px 0 0;color:var(--muted)}
+.search{
+  background:white;border:1px solid var(--line);border-radius:16px;
+  padding:12px 14px;min-width:310px;display:flex;gap:10px;align-items:center;
+  box-shadow:0 8px 24px rgba(15,23,42,.05);
+}
+.search input{border:0;outline:0;width:100%;font:inherit}
+.btn{
+  border:0;border-radius:15px;padding:12px 16px;
+  background:var(--yellow);color:#050505;font-weight:900;cursor:pointer;
+  box-shadow:0 12px 30px rgba(255,176,0,.25);
+  transition:.2s ease;
+}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.04)}
+.btn.black{background:#090909;color:var(--yellow);box-shadow:none}
+.btn.white{background:white;color:#111;border:1px solid var(--line);box-shadow:none}
+.btn.red{background:#fee2e2;color:#991b1b;box-shadow:none}
+.page{display:none;animation:in .3s ease both}
+.page.active{display:block}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hero{
+  background:
+    radial-gradient(circle at 85% 15%,rgba(255,209,92,.28),transparent 24%),
+    linear-gradient(135deg,#010101,#111827 62%,#2f2507);
+  color:white;
+  border-radius:30px;
+  padding:30px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  position:relative;
+  margin-bottom:20px;
+}
+.hero:after{
+  content:"";
+  position:absolute;inset:-60px;
+  background:linear-gradient(110deg,transparent 28%,rgba(255,255,255,.08),transparent 48%);
+  animation:shine 5s infinite linear;
+}
+@keyframes shine{from{transform:translateX(-40%)}to{transform:translateX(42%)}}
+.hero h1,.hero p,.hero .actions{position:relative;z-index:1}
+.hero h1{font-size:35px;margin:0 0 10px;max-width:850px}
+.hero p{color:#ededed;max-width:760px;margin:0 0 18px}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.grid{display:grid;gap:18px}
+.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card,.section{
+  background:white;
+  border:1px solid rgba(0,0,0,.05);
+  border-radius:24px;
+  padding:20px;
+  box-shadow:0 12px 34px rgba(15,23,42,.08);
+}
+.section{border-radius:28px;margin-top:18px;padding:22px}
+.card label{
+  font-size:12px;
+  color:#777;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  font-weight:1000;
+}
+.card strong{display:block;font-size:27px;margin:7px 0 3px}
+.card span,.muted{font-size:13px;color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.section h3{font-size:22px;margin:0}
+.section p{color:var(--muted);margin:5px 0 0}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.two{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+input,select,textarea{
+  width:100%;border:1px solid var(--line);border-radius:14px;
+  padding:12px;font:inherit;outline:0;background:white;color:#111;
+}
+textarea{min-height:82px;resize:vertical}
+.field{display:grid;gap:7px;margin-bottom:12px}
+.field label{font-size:12px;color:#4b5563;font-weight:1000}
+.table{width:100%;border-collapse:separate;border-spacing:0 10px}
+.table th{text-align:left;font-size:12px;color:#777;text-transform:uppercase;padding:0 10px}
+.table td{background:#f8fafc;border-top:1px solid #edf0f4;border-bottom:1px solid #edf0f4;padding:13px 10px}
+.table td:first-child{border-left:1px solid #edf0f4;border-radius:14px 0 0 14px;font-weight:900}
+.table td:last-child{border-right:1px solid #edf0f4;border-radius:0 14px 14px 0}
+.pill{
+  display:inline-block;border-radius:999px;padding:6px 9px;
+  font-size:12px;font-weight:1000;background:#fff8df;color:#5b3900;
+}
+.pill.green{background:#dcfce7;color:#14532d}
+.pill.red{background:#fee2e2;color:#991b1b}
+.pill.blue{background:#dbeafe;color:#1e3a8a}
+.pill.black{background:#111;color:var(--yellow)}
+.small{
+  border:0;border-radius:12px;padding:8px 10px;
+  cursor:pointer;font-weight:900;background:#eef2f7;color:#111;
+}
+.small.yellow{background:var(--yellow)}
+.small.red{background:#fee2e2;color:#991b1b}
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(220px,1fr));gap:14px;overflow:auto;padding-bottom:8px}
+.column{
+  background:#f8fafc;border:1px solid #edf0f4;border-radius:20px;
+  padding:12px;min-height:340px;
+}
+.column h4{margin:0 0 12px;display:flex;justify-content:space-between}
+.lead-card,.task-card,.employee-card{
+  background:white;border:1px solid var(--line);border-radius:18px;
+  padding:14px;margin-bottom:10px;box-shadow:0 8px 20px rgba(15,23,42,.05);
+}
+.lead-card b,.task-card b{display:block;margin-bottom:5px}
+.mini{font-size:12px;color:var(--muted)}
+.calendar-wrap{display:grid;grid-template-columns:260px 1fr;gap:18px}
+.client-chip{
+  padding:12px;border:1px solid var(--line);background:white;border-radius:16px;
+  margin-bottom:10px;cursor:grab;font-weight:900;
+}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:10px;overflow:auto}
+.day{
+  min-height:150px;background:#f8fafc;border:1px solid #edf0f4;
+  border-radius:18px;padding:10px;
+}
+.day .num{font-weight:1000;margin-bottom:8px}
+.event{
+  background:#111;color:white;border-radius:13px;padding:8px;margin-top:7px;
+  font-size:12px;border-left:4px solid var(--yellow);
+}
+.event small{display:block;color:#ddd;margin-top:3px}
+.employee-profile{
+  background:
+    radial-gradient(circle at 90% 0%,rgba(255,176,0,.22),transparent 26%),
+    linear-gradient(135deg,#090909,#111827);
+  color:white;border-radius:24px;padding:20px;
+}
+.skill{display:flex;justify-content:space-between;gap:10px;margin:12px 0}
+.bar-bg{height:9px;background:rgba(255,255,255,.16);border-radius:999px;overflow:hidden;width:55%}
+.bar-fill{height:100%;background:var(--yellow);border-radius:999px}
+.months{display:grid;grid-template-columns:repeat(12,minmax(90px,1fr));gap:10px;overflow:auto}
+.month{background:#0b0b0f;color:white;border-radius:18px;padding:12px;min-height:120px}
+.month h5{margin:0 0 8px;color:var(--yellow)}
+.month b{font-size:16px}
+.month-item{font-size:11px;margin-top:7px;background:rgba(255,176,0,.13);border:1px solid rgba(255,176,0,.24);border-radius:11px;padding:7px}
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  display:none;place-items:center;z-index:99;padding:20px;
+}
+.modal.open{display:grid}
+.modal-box{
+  width:min(720px,96vw);max-height:90vh;overflow:auto;
+  background:white;border-radius:28px;padding:24px;box-shadow:0 40px 90px rgba(0,0,0,.35);
+}
+
+
+.inline-edit{
+  width:100%;
+  border:1px solid #E6E8EF;
+  border-radius:12px;
+  padding:9px 10px;
+  font:inherit;
+  background:#fff;
+  color:#111827;
+}
+.inline-edit.dark{
+  background:#111;
+  color:#FFD15C;
+  border-color:rgba(255,176,0,.35);
+}
+.edit-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color:#71717a;
+  font-weight:1000;
+  display:block;
+  margin-bottom:5px;
+}
+
+.client-card{
+  background:white;
+  border:1px solid rgba(0,0,0,.05);
+  border-radius:24px;
+  padding:20px;
+  box-shadow:0 12px 34px rgba(15,23,42,.08);
+  transition:.22s ease;
+}
+.client-card:hover{transform:translateY(-3px);border-color:rgba(255,176,0,.55)}
+.client-card h3{margin:0 0 4px}
+.client-card .scenario{
+  background:#f8fafc;
+  border:1px solid #edf0f4;
+  border-radius:16px;
+  padding:12px;
+  margin-top:12px;
+}
+.scope-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:10px;
+}
+.scope-tag{
+  background:#111;
+  color:#FFD15C;
+  border-radius:999px;
+  padding:6px 9px;
+  font-size:12px;
+  font-weight:900;
+}
+
+
+.scope-hero{
+  margin-top:14px;
+  background:linear-gradient(135deg,#0b0b0f,#171923);
+  border:1px solid rgba(255,176,0,.25);
+  border-radius:18px;
+  padding:14px;
+  color:white;
+}
+.scope-hero b{
+  color:#FFD15C;
+  display:block;
+  margin-bottom:10px;
+  font-size:14px;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+}
+.scope-list.big{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.scope-list.big .scope-tag{
+  background:rgba(255,176,0,.14);
+  color:#fff;
+  border:1px solid rgba(255,176,0,.35);
+  border-radius:12px;
+  padding:9px 10px;
+  font-size:12px;
+}
+.contract-duration-box{
+  background:#fff8df;
+  border:1px solid rgba(255,176,0,.35);
+  border-radius:16px;
+  padding:12px;
+}
+
+
+.client-filter-bar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.filter-btn{
+  border:1px solid #E6E8EF;
+  background:#fff;
+  color:#111827;
+  border-radius:999px;
+  padding:11px 15px;
+  font-weight:1000;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.filter-btn:hover{transform:translateY(-2px)}
+.filter-btn.active{
+  background:#090909;
+  color:#FFD15C;
+  border-color:#090909;
+  box-shadow:0 10px 28px rgba(0,0,0,.16);
+}
+.filter-btn .count{
+  margin-left:6px;
+  background:rgba(255,176,0,.18);
+  color:#7a4b00;
+  border-radius:999px;
+  padding:3px 7px;
+  font-size:11px;
+}
+.filter-btn.active .count{
+  background:rgba(255,176,0,.24);
+  color:#FFD15C;
+}
+
+
+.contract-filter-note{
+  color:#71717a;
+  font-size:12px;
+  font-weight:800;
+}
+
+
+.finance-month-bar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.month-btn{
+  border:1px solid #E6E8EF;
+  background:#fff;
+  color:#111827;
+  border-radius:999px;
+  padding:9px 12px;
+  font-weight:1000;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.month-btn.active{
+  background:#090909;
+  color:#FFD15C;
+  border-color:#090909;
+}
+.finance-subtitle{
+  margin-top:18px;
+  margin-bottom:8px;
+  color:#111827;
+  font-size:18px;
+}
+
+
+.save-toast{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  background:#090909;
+  color:#FFD15C;
+  border:1px solid rgba(255,176,0,.35);
+  box-shadow:0 18px 55px rgba(0,0,0,.22);
+  padding:13px 16px;
+  border-radius:16px;
+  font-weight:900;
+  z-index:150;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+  transition:.25s ease;
+}
+.save-toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+.last-save{
+  font-size:11px;
+  color:#71717a;
+  font-weight:800;
+  margin-left:4px;
+}
+
+
+.dashboard-pro-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:18px;
+  margin-top:18px;
+}
+.pro-panel{
+  background:white;
+  border:1px solid rgba(0,0,0,.05);
+  border-radius:28px;
+  padding:22px;
+  box-shadow:0 12px 34px rgba(15,23,42,.08);
+  overflow:hidden;
+}
+.pro-panel.dark{
+  background:
+    radial-gradient(circle at 88% 0%,rgba(255,176,0,.22),transparent 28%),
+    linear-gradient(135deg,#090909,#111827);
+  color:white;
+}
+.pro-panel h3{margin:0;font-size:22px}
+.pro-panel p{margin:5px 0 0;color:#71717a}
+.pro-panel.dark p{color:#d4d4d8}
+.chart-bars{
+  height:260px;
+  display:flex;
+  align-items:end;
+  gap:12px;
+  padding-top:22px;
+}
+.chart-bar{
+  flex:1;
+  min-width:38px;
+  border-radius:15px 15px 6px 6px;
+  background:linear-gradient(180deg,#FFD15C,#FFB000);
+  position:relative;
+  box-shadow:0 14px 28px rgba(255,176,0,.22);
+  transition:.25s ease;
+}
+.chart-bar:hover{transform:translateY(-4px);filter:brightness(1.04)}
+.chart-bar span{
+  position:absolute;
+  left:50%;
+  bottom:-25px;
+  transform:translateX(-50%);
+  font-size:11px;
+  font-weight:900;
+  color:#71717a;
+}
+.chart-bar small{
+  position:absolute;
+  left:50%;
+  top:-24px;
+  transform:translateX(-50%);
+  font-size:11px;
+  color:#111827;
+  font-weight:1000;
+  white-space:nowrap;
+}
+.donut-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:22px;
+  min-height:250px;
+  flex-wrap:wrap;
+}
+.donut{
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  background:conic-gradient(#FFB000 var(--pct),rgba(255,255,255,.14) 0);
+  display:grid;
+  place-items:center;
+  box-shadow:0 0 40px rgba(255,176,0,.18);
+}
+.donut-inner{
+  width:128px;
+  height:128px;
+  border-radius:50%;
+  background:#0b0b0f;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.08);
+}
+.donut-inner strong{font-size:30px;color:#FFD15C}
+.donut-inner span{font-size:12px;color:#e5e7eb}
+.legend-list{display:grid;gap:10px;min-width:200px}
+.legend-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:12px;
+}
+.legend-dot{
+  width:11px;
+  height:11px;
+  border-radius:999px;
+  background:#FFB000;
+  display:inline-block;
+  margin-right:8px;
+}
+.progress-list{display:grid;gap:12px;margin-top:18px}
+.progress-row{display:grid;gap:7px}
+.progress-head{display:flex;justify-content:space-between;font-size:13px;font-weight:900}
+.progress-track{height:11px;background:#f1f5f9;border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#FFB000,#FFD15C);border-radius:999px}
+.big-indicator{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+.big-mini{
+  background:#f8fafc;
+  border:1px solid #edf0f4;
+  border-radius:20px;
+  padding:16px;
+}
+.big-mini label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:#71717a;
+  font-weight:1000;
+}
+.big-mini strong{display:block;font-size:22px;margin-top:6px}
+.dashboard-client-list{
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+}
+.dashboard-client-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+  background:#f8fafc;
+  border:1px solid #edf0f4;
+  border-radius:17px;
+  padding:12px;
+}
+.dashboard-client-row b{font-size:14px}
+.dashboard-client-row small{color:#71717a}
+
+.notification-dock{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  width:min(420px,calc(100vw - 34px));
+  z-index:140;
+  display:grid;
+  gap:10px;
+  pointer-events:none;
+}
+.payment-alert{
+  pointer-events:auto;
+  background:
+    radial-gradient(circle at 92% 0%,rgba(255,176,0,.22),transparent 30%),
+    linear-gradient(135deg,#090909,#111827);
+  color:white;
+  border:1px solid rgba(255,176,0,.34);
+  border-radius:22px;
+  padding:16px;
+  box-shadow:0 24px 70px rgba(0,0,0,.32);
+  animation:alertIn .32s ease both;
+}
+@keyframes alertIn{
+  from{opacity:0;transform:translateY(16px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.payment-alert-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.payment-alert h4{
+  margin:0;
+  color:#FFD15C;
+  font-size:15px;
+}
+.payment-alert p{
+  margin:6px 0 0;
+  color:#e5e7eb;
+  font-size:13px;
+  line-height:1.35;
+}
+.payment-alert-list{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+  max-height:220px;
+  overflow:auto;
+}
+.payment-alert-item{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:15px;
+  padding:10px;
+}
+.payment-alert-item b{
+  font-size:13px;
+}
+.payment-alert-item small{
+  display:block;
+  color:#d4d4d8;
+  margin-top:3px;
+}
+.payment-alert-item strong{
+  color:#FFD15C;
+  white-space:nowrap;
+}
+.alert-close{
+  border:0;
+  background:rgba(255,255,255,.08);
+  color:white;
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:1000;
+}
+.alert-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
+}
+.alert-actions button{
+  border:0;
+  border-radius:12px;
+  padding:9px 11px;
+  font-weight:900;
+  cursor:pointer;
+}
+.alert-actions .primary{
+  background:#FFB000;
+  color:#050505;
+}
+.alert-actions .ghost{
+  background:rgba(255,255,255,.1);
+  color:white;
+}
+.notification-settings{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.notification-settings input{
+  width:82px;
+}
+
+@media(max-width:1150px){
+  .dashboard-pro-grid{grid-template-columns:1fr}
+  .big-indicator{grid-template-columns:1fr}
+}
+
+
+.notification-dock{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  width:min(420px,calc(100vw - 34px));
+  z-index:140;
+  display:grid;
+  gap:10px;
+  pointer-events:none;
+}
+.payment-alert{
+  pointer-events:auto;
+  background:
+    radial-gradient(circle at 92% 0%,rgba(255,176,0,.22),transparent 30%),
+    linear-gradient(135deg,#090909,#111827);
+  color:white;
+  border:1px solid rgba(255,176,0,.34);
+  border-radius:22px;
+  padding:16px;
+  box-shadow:0 24px 70px rgba(0,0,0,.32);
+  animation:alertIn .32s ease both;
+}
+@keyframes alertIn{
+  from{opacity:0;transform:translateY(16px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.payment-alert-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.payment-alert h4{
+  margin:0;
+  color:#FFD15C;
+  font-size:15px;
+}
+.payment-alert p{
+  margin:6px 0 0;
+  color:#e5e7eb;
+  font-size:13px;
+  line-height:1.35;
+}
+.payment-alert-list{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+  max-height:220px;
+  overflow:auto;
+}
+.payment-alert-item{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:15px;
+  padding:10px;
+}
+.payment-alert-item b{
+  font-size:13px;
+}
+.payment-alert-item small{
+  display:block;
+  color:#d4d4d8;
+  margin-top:3px;
+}
+.payment-alert-item strong{
+  color:#FFD15C;
+  white-space:nowrap;
+}
+.alert-close{
+  border:0;
+  background:rgba(255,255,255,.08);
+  color:white;
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:1000;
+}
+.alert-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
+}
+.alert-actions button{
+  border:0;
+  border-radius:12px;
+  padding:9px 11px;
+  font-weight:900;
+  cursor:pointer;
+}
+.alert-actions .primary{
+  background:#FFB000;
+  color:#050505;
+}
+.alert-actions .ghost{
+  background:rgba(255,255,255,.1);
+  color:white;
+}
+.notification-settings{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.notification-settings input{
+  width:82px;
+}
+
+@media(max-width:1150px){
+  .sidebar{display:none}
+  .kpis,.three,.split,.calendar-wrap{grid-template-columns:1fr}
+  .main{padding:18px}
+}
+@media(max-width:700px){
+  .topbar{display:block}
+  .search{min-width:0;margin-top:12px}
+  .hero h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">V</div>
+      <div><h1>V-Deal System</h1><p>Centro de comando da agência</p></div>
+    </div>
+    <div class="nav-title">Principal</div>
+    <button class="nav active" onclick="go('dashboard',this)">▣ Dashboard</button>
+    <button class="nav" onclick="go('crm',this)">◈ CRM Comercial</button>
+    <button class="nav" onclick="go('clientes',this)">◒ Clientes</button>
+    <button class="nav" onclick="go('agenda',this)">◉ Agenda Editorial</button>
+    <button class="nav" onclick="go('contratos',this)">▰ Contratos</button>
+    <button class="nav" onclick="go('financeiro',this)">◌ Financeiro</button>
+    <button class="nav" onclick="go('operacao',this)">◎ Operação</button>
+    <button class="nav" onclick="go('funcionarios',this)">◍ Funcionários</button>
+    <div class="nav-title">Sistema</div>
+    <button class="nav" onclick="go('relatorios',this)">◐ Relatórios</button>
+    <button class="nav" onclick="go('config',this)">⚙ Configurações</button>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h2 id="pageTitle">Dashboard Geral</h2><p id="pageSub">Gestão, vendas, operação e lucro no mesmo painel.</p></div>
+      <div class="actions" style="align-items:center">
+        <div class="search">⌕ <input id="globalSearch" placeholder="Buscar cliente, contrato, tarefa..." oninput="renderAll()"></div>
+        <button class="btn black" onclick="manualSave()">Salvar</button>
+        <button class="btn white" onclick="exportBackup()">Exportar backup</button>
+        <button class="btn white" onclick="document.getElementById('backupInput').click()">Importar</button>
+        <input id="backupInput" type="file" accept="application/json" style="display:none" onchange="importBackup(event)">
+      </div>
+    </div>
+
+    <section class="page active" id="dashboard">
+      <div class="hero">
+        <h1>Gestão, vendas, operação e lucro no mesmo painel.</h1>
+        <p>Um sistema único para acompanhar CRM, agenda editorial, contratos, booking anual, financeiro, equipe, tarefas, feedbacks e melhorias.</p>
+        <div class="actions">
+          <button class="btn" onclick="openModal('lead')">+ Novo lead</button>
+          <button class="btn white" onclick="openModal('contract')">+ Novo contrato</button>
+          <button class="btn black" onclick="goById('agenda')">Ver agenda editorial</button>
+        </div>
+      </div>
+      <div class="grid kpis" id="dashboardKpis"></div>
+      <div class="dashboard-pro-grid" id="dashboardProCharts"></div>
+      <div class="grid split">
+        <div class="section">
+          <div class="section-head"><div><h3>Operação da equipe</h3><p>Empenho, feedbacks e melhorias aplicadas.</p></div><button class="btn black" onclick="goById('operacao')">Ver operação</button></div>
+          <div id="operationPreview"></div>
+        </div>
+        <div class="section">
+          <div class="section-head"><div><h3>Próximas entradas</h3><p>Recebimentos previstos por contratos.</p></div></div>
+          <table class="table" id="cashPreview"></table>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="crm">
+      <div class="section">
+        <div class="section-head">
+          <div><h3>CRM Comercial</h3><p>Leads, clientes em negociação, valor potencial e impacto no caixa.</p></div>
+          <div class="actions"><button class="btn" onclick="openModal('lead')">+ Adicionar lead</button><button class="btn red" onclick="deleteLastLead()">Excluir último</button></div>
+        </div>
+        <div class="grid kpis" id="crmKpis"></div>
+        <div class="kanban" id="kanban"></div>
+      </div>
+    </section>
+
+
+    <section class="page" id="clientes">
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <h3>Clientes</h3>
+            <p>Cenário atual, escopo contratado, valor mensal, dia de pagamento e responsável por cada cliente.</p>
+          </div>
+          <div class="client-filter-bar">
+            <button class="filter-btn active" id="filterAtivos" onclick="setClientFilter('ativos')">Ativos <span class="count" id="countAtivos">0</span></button>
+            <button class="filter-btn" id="filterInativos" onclick="setClientFilter('inativos')">Inativos <span class="count" id="countInativos">0</span></button>
+            <button class="btn black" onclick="normalizeData();renderAll()">Sincronizar</button>
+            <button class="btn" onclick="openModal('client')">+ Novo cliente</button>
+          </div>
+        </div>
+        <div class="grid kpis" id="clientKpis"></div>
+        <div class="three" id="clientsGrid"></div>
+      </div>
+    </section>
+
+    <section class="page" id="agenda">
+      <div class="section">
+        <div class="section-head">
+          <div><h3>Agenda Editorial Mensal</h3><p>Arraste somente clientes ativos ou em onboarding para os dias. Clientes pausados, inativos e encerrados não aparecem aqui.</p></div>
+          <button class="btn" onclick="openModal('content')">+ Novo conteúdo</button>
+        </div>
+        <div class="calendar-wrap">
+          <div>
+            <h3>Clientes</h3>
+            <div id="clientChips"></div>
+            <h3 style="margin-top:20px">Filtros</h3>
+            <div class="field"><label>Canal</label><select id="filterChannel" onchange="renderCalendar()"><option>Todos</option><option>Instagram</option><option>Facebook</option><option>Google</option><option>Pinterest</option><option>LinkedIn</option></select></div>
+            <div class="field"><label>Responsável</label><select id="filterResp" onchange="renderCalendar()"><option>Todos</option><option>Alice</option><option>Eduardo</option><option>Design</option><option>Comercial</option></select></div>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="contratos">
+      <div class="section">
+        <div class="section-head">
+          <div><h3>Contratos e Booking Anual</h3><p>Booking = duração do contrato assinado × assinatura mensal, registrado por ano.</p></div>
+          <div class="client-filter-bar">
+            <button class="filter-btn active" id="contractFilterAtivos" onclick="setContractFilter('ativos')">Ativos <span class="count" id="contractCountAtivos">0</span></button>
+            <button class="filter-btn" id="contractFilterInativos" onclick="setContractFilter('inativos')">Inativos</button>
+            <button class="btn black" onclick="normalizeData();renderAll()">Sincronizar</button>
+            <button class="btn" onclick="openModal('contract')">+ Novo contrato</button>
+          </div>
+        </div>
+        <div class="grid kpis" id="contractKpis"></div>
+        <div class="actions" style="margin:16px 0">
+          <button class="btn black" onclick="setYear(2026)">2026</button>
+          <button class="btn white" onclick="setYear(2027)">2027</button>
+          <button class="btn white" onclick="setYear(2028)">2028</button>
+        </div>
+        <div id="contractsList"></div>
+        <h3 style="margin-top:24px">Booking mês a mês <span id="yearLabel">2026</span></h3>
+        <div class="months" id="bookingMonths"></div>
+      </div>
+    </section>
+
+    <section class="page" id="financeiro">
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <h3>Financeiro</h3>
+            <p>Entradas somente de clientes pagantes: ativos ou em onboarding. Clientes pausados, inativos e encerrados não entram no caixa.</p>
+          </div>
+          <div class="actions">
+            <button class="btn black" onclick="normalizeData();renderAll()">Sincronizar</button>
+            <button class="btn" onclick="openModal('finance')">+ Lançamento</button>
+          </div>
+        </div>
+        <div class="finance-month-bar" id="financeMonthBar"></div>
+        <div class="grid kpis" id="financeKpis"></div>
+        <table class="table" id="financeTable"></table>
+      </div>
+    </section>
+
+    <section class="page" id="operacao">
+      <div class="section">
+        <div class="section-head"><div><h3>Split de Operação</h3><p>Agenda de tarefas ao lado do perfil editável do funcionário.</p></div><button class="btn" onclick="openModal('task')">+ Nova tarefa</button></div>
+        <div class="split">
+          <div>
+            <h3>Agenda de tarefas</h3>
+            <div id="taskList"></div>
+          </div>
+          <div>
+            <h3>Perfil do funcionário</h3>
+            <div id="employeeProfile"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="funcionarios">
+      <div class="section">
+        <div class="section-head"><div><h3>Funcionários e Custos</h3><p>Habilidades, feedbacks, melhorias, custo mensal e clientes atendidos.</p></div><button class="btn" onclick="openModal('employee')">+ Novo funcionário</button></div>
+        <div class="three" id="employeesGrid"></div>
+      </div>
+    </section>
+
+    <section class="page" id="relatorios">
+      <div class="section">
+        <div class="section-head"><div><h3>Relatórios</h3><p>Resumo comercial, operacional, financeiro e editorial.</p></div><button class="btn">Exportar PDF</button></div>
+        <div class="grid kpis" id="reportKpis"></div>
+        <div class="split">
+          <div class="card"><h3>Clientes mais relevantes</h3><div id="topClients"></div></div>
+          <div class="card"><h3>Resumo operacional</h3><div id="operationReport"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="config">
+      <div class="section">
+        <h3>Configurações</h3>
+        <p>Visual premium V-Deal: black piano, amarelo, branco e animações suaves. Nesta versão, os clientes base ficam registrados no código e os dados também ficam salvos no navegador. Para segurança, use Exportar backup.</p>
+        <div class="split" style="margin-top:18px">
+          <div class="card"><h3>Identidade</h3><div class="field"><label>Nome do sistema</label><input value="V-Deal System"></div><div class="field"><label>Frase</label><input value="Gestão, vendas, operação e lucro no mesmo painel."></div></div>
+          <div class="card"><h3>Permissões</h3><div class="field"><label>Administrador</label><input value="Eduardo"></div><div class="field"><label>Equipe</label><input value="Alice, Design, Comercial"></div></div>
+
+          <div class="card">
+            <h3>Notificações de cobrança</h3>
+            <p class="muted">Mostra um pop-up no rodapé quando um cliente ativo estiver próximo do dia de pagamento.</p>
+            <div class="notification-settings">
+              <label style="font-weight:900">Avisar com</label>
+              <input id="notifyDaysInput" type="number" min="1" max="15" value="3" onchange="setNotifyDays(this.value)">
+              <span class="muted">dias de antecedência</span>
+            </div>
+            <div class="actions" style="margin-top:12px">
+              <button class="btn black" onclick="checkPaymentAlerts(true)">Testar alerta</button>
+              <button class="btn white" onclick="clearDismissedAlerts()">Reativar alertas fechados</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="notification-dock" id="notificationDock"></div>
+<div class="save-toast" id="saveToast">Alterações salvas</div>
+<div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
+
+<script>
+const months=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+let year=2026;
+let selectedEmployee=0;
+let clientStatusFilter="ativos";
+let contractStatusFilter="ativos";
+let financeMonth=4;
+
+const STORAGE_KEY="vdeal_system_clientes_registrados_v1";
+function loadStoredData(){
+ const keys=[
+  STORAGE_KEY,
+  "vdeal_active_finance_rule_v6",
+  "vdeal_full_system_active_cash_v5",
+  "vdeal_full_system_financeiro_maio_v4",
+  "vdeal_full_system_sync_v3",
+  "vdeal_full_system_ok"
+ ];
+ for(const key of keys){
+  try{
+   const raw=localStorage.getItem(key);
+   if(raw) return JSON.parse(raw);
+  }catch(e){}
+ }
+ return null;
+}
+let data=loadStoredData()||{
+ clients:[
+  {id:1,name:"Aldeia das Ervas",segment:"Farmácia de manipulação",value:1500,payDay:28,status:"Ativo",resp:"Alice",duration:12,scenario:"Cliente ativo com foco em produtos, campanhas sazonais, loja online e comunicação didática para Amantes da Natureza.",contracted:["Social Media","Stories","Campanhas","Site","Suporte mensal"]},
+  {id:2,name:"Ideação Cenografia",segment:"Cenografia para feiras e eventos",value:1800,payDay:28,status:"Ativo",resp:"Eduardo",duration:12,scenario:"Cliente com forte presença em feiras e eventos, usando recaps, LinkedIn e autoridade em arquitetura efêmera.",contracted:["LinkedIn","Instagram","Recaps de eventos","Calendário editorial","Criativos premium"]},
+  {id:3,name:"Êxito Cobranças",segment:"Cobrança condominial",value:1500,payDay:15,status:"Ativo",resp:"Comercial",duration:12,scenario:"Cliente em construção de autoridade para síndicos, com foco em recuperação de inadimplência e relacionamento condominial.",contracted:["SEO","Artigos","LinkedIn","Campanhas comerciais","Presença digital"]},
+  {id:4,name:"Wesley Machado LDN",segment:"MMA, treinos e personal fight",value:1200,payDay:20,status:"Ativo",resp:"Eduardo",duration:6,scenario:"Cliente voltado à presença digital internacional, treinos, autoridade como lutador e captação de alunos em Londres.",contracted:["Site","Instagram","Conteúdo bilíngue","Posicionamento","Suporte"]},
+  {id:5,name:"Standay / Alameda de Serviços",segment:"Serviços e comércio local",value:1500,payDay:15,status:"Ativo",resp:"Eduardo",duration:3,scenario:"Cliente com foco em campanhas comerciais, datas sazonais, comunicação para lojistas e materiais de apoio para o shopping de serviços.",contracted:["Campanhas","Vídeos","Artes gráficas","Stories","Atendimento de fornecedores"]},
+  {id:6,name:"Hilarion Trading",segment:"Importação e exportação",value:1500,payDay:20,status:"Ativo",resp:"Comercial",duration:6,scenario:"Cliente com posicionamento B2B, autoridade em comércio exterior e comunicação institucional voltada à confiança e credibilidade.",contracted:["Social Media","Copy institucional","Stories","Conteúdo comercial","Design"]},
+  {id:7,name:"Dr. Juliana Sencini",segment:"Pediatria e pneumologia pediátrica",value:1200,payDay:10,status:"Ativo",resp:"Alice",duration:6,scenario:"Cliente da área médica com conteúdo educativo para famílias, vacinação, saúde infantil e autoridade profissional.",contracted:["Instagram","Conteúdo educativo","Calendário editorial","Stories","Reels"]},
+  {id:8,name:"Dr. Giovanni Pinto",segment:"Cardiologia",value:1200,payDay:21,status:"Ativo",resp:"Alice",duration:6,scenario:"Cliente médico com foco em prevenção, cuidado cardiológico, autoridade e comunicação didática para pacientes.",contracted:["Instagram","Posts educativos","Stories","Reels","Planejamento mensal"]},
+  {id:9,name:"Emariano Instrumentos Musicais",segment:"Loja de instrumentos musicais",value:1000,payDay:20,status:"Ativo",resp:"Design",duration:6,scenario:"Cliente de varejo musical com conteúdo de produtos, origem dos instrumentos, datas comerciais e campanhas promocionais.",contracted:["Instagram","Calendário editorial","Posts de instrumentos","Stories","Campanhas"]},
+  {id:10,name:"Sold Pay",segment:"Máquinas de cartão e pagamentos",value:1200,payDay:20,status:"Ativo",resp:"Comercial",duration:6,scenario:"Cliente com comunicação voltada a soluções de pagamento, prospecção comercial e argumentos para PMEs.",contracted:["Social Media","Copy comercial","Artes","Stories","Campanhas"]},
+  {id:11,name:"Agliardi",segment:"Software house e performance de e-commerce",value:1500,payDay:20,status:"Ativo",resp:"Eduardo",duration:6,scenario:"Cliente de tecnologia com foco em performance, e-commerce, migração de plataforma e autoridade técnica.",contracted:["LinkedIn","Conteúdo técnico","Copy","Social Media","Estratégia"]},
+  {id:12,name:"Manux",segment:"Migração de plataforma e tecnologia",value:1500,payDay:20,status:"Ativo",resp:"Eduardo",duration:6,scenario:"Cliente de tecnologia com comunicação sobre frontend, backend, migração e soluções digitais para empresas.",contracted:["Conteúdo técnico","LinkedIn","Artes","Copy","Estratégia"]}
+ ],
+ leads:[
+  {id:1,name:"Clínica Nova",stage:"Novo Lead",value:1800,payDay:10,origin:"Instagram",resp:"Eduardo",next:"Enviar proposta"},
+  {id:2,name:"Loja Premium",stage:"Proposta enviada",value:2500,payDay:15,origin:"Indicação",resp:"Comercial",next:"Follow-up"},
+  {id:3,name:"Construtora Alfa",stage:"Reunião marcada",value:3000,payDay:5,origin:"LinkedIn",resp:"Eduardo",next:"Reunião sexta"}
+ ],
+ contracts:[
+  {id:1,client:"Aldeia das Ervas",monthly:1500,start:"2026-01-05",duration:12,payDay:28,status:"Ativo",resp:"Alice",scope:"Social media, stories, campanhas, site e suporte mensal."},
+  {id:2,client:"Ideação Cenografia",monthly:1800,start:"2026-01-01",duration:12,payDay:28,status:"Ativo",resp:"Eduardo",scope:"LinkedIn, Instagram, recaps de eventos, calendário editorial e criativos premium."},
+  {id:3,client:"Êxito Cobranças",monthly:1500,start:"2026-01-10",duration:12,payDay:15,status:"Ativo",resp:"Comercial",scope:"SEO, artigos, LinkedIn, campanhas comerciais e presença digital."},
+  {id:4,client:"Wesley Machado LDN",monthly:1200,start:"2026-01-15",duration:6,payDay:20,status:"Ativo",resp:"Eduardo",scope:"Site, Instagram, conteúdo bilíngue, posicionamento e suporte."},
+  {id:5,client:"Standay / Alameda de Serviços",monthly:1500,start:"2026-02-01",duration:3,payDay:15,status:"Ativo",resp:"Eduardo",scope:"Campanhas, vídeos, artes gráficas, stories e atendimento de fornecedores."},
+  {id:6,client:"Hilarion Trading",monthly:1500,start:"2026-02-01",duration:6,payDay:20,status:"Ativo",resp:"Comercial",scope:"Social media, copy institucional, stories, conteúdo comercial e design."},
+  {id:7,client:"Dr. Juliana Sencini",monthly:1200,start:"2026-01-01",duration:6,payDay:10,status:"Ativo",resp:"Alice",scope:"Instagram, conteúdo educativo, calendário editorial, stories e reels."},
+  {id:8,client:"Dr. Giovanni Pinto",monthly:1200,start:"2026-01-01",duration:6,payDay:21,status:"Ativo",resp:"Alice",scope:"Instagram, posts educativos, stories, reels e planejamento mensal."},
+  {id:9,client:"Emariano Instrumentos Musicais",monthly:1000,start:"2026-01-01",duration:6,payDay:20,status:"Ativo",resp:"Design",scope:"Instagram, calendário editorial, posts de instrumentos, stories e campanhas."},
+  {id:10,client:"Sold Pay",monthly:1200,start:"2026-01-01",duration:6,payDay:20,status:"Ativo",resp:"Comercial",scope:"Social media, copy comercial, artes, stories e campanhas."},
+  {id:11,client:"Agliardi",monthly:1500,start:"2026-02-01",duration:6,payDay:20,status:"Ativo",resp:"Eduardo",scope:"LinkedIn, conteúdo técnico, copy, social media e estratégia."},
+  {id:12,client:"Manux",monthly:1500,start:"2026-02-01",duration:6,payDay:20,status:"Ativo",resp:"Eduardo",scope:"Conteúdo técnico, LinkedIn, artes, copy e estratégia."}
+ ],
+ contents:[
+  {id:1,client:"Aldeia das Ervas",day:3,time:"09:00",channel:"Instagram",format:"Feed",resp:"Alice",status:"Planejado",theme:"Produto em destaque"},
+  {id:2,client:"Ideação Cenografia",day:5,time:"11:00",channel:"LinkedIn",format:"Reels",resp:"Eduardo",status:"Em produção",theme:"Recap de estande"},
+  {id:3,client:"Êxito Cobranças",day:8,time:"10:30",channel:"Google",format:"Blog",resp:"Comercial",status:"Em aprovação",theme:"Inadimplência condominial"}
+ ],
+ finance:[
+  {id:1,type:"Entrada",desc:"Aldeia das Ervas",value:1500,date:"2026-01-28",status:"Previsto"},
+  {id:2,type:"Entrada",desc:"Ideação Cenografia",value:1800,date:"2026-01-28",status:"Previsto"},
+  {id:3,type:"Entrada",desc:"Êxito Cobranças",value:1500,date:"2026-01-15",status:"Previsto"},
+  {id:4,type:"Entrada",desc:"Wesley Machado LDN",value:1200,date:"2026-01-20",status:"Previsto"},
+  {id:5,type:"Entrada",desc:"Standay / Alameda de Serviços",value:1500,date:"2026-01-15",status:"Previsto"},
+  {id:6,type:"Entrada",desc:"Hilarion Trading",value:1500,date:"2026-01-20",status:"Previsto"},
+  {id:7,type:"Entrada",desc:"Dr. Juliana Sencini",value:1200,date:"2026-01-10",status:"Previsto"},
+  {id:8,type:"Entrada",desc:"Dr. Giovanni Pinto",value:1200,date:"2026-01-21",status:"Previsto"},
+  {id:9,type:"Entrada",desc:"Emariano Instrumentos Musicais",value:1000,date:"2026-01-20",status:"Previsto"},
+  {id:10,type:"Entrada",desc:"Sold Pay",value:1200,date:"2026-01-20",status:"Previsto"},
+  {id:11,type:"Entrada",desc:"Agliardi",value:1500,date:"2026-01-20",status:"Previsto"},
+  {id:12,type:"Entrada",desc:"Manux",value:1500,date:"2026-01-20",status:"Previsto"},
+  {id:101,type:"Saída",desc:"Ferramentas e IA",value:420,date:"2026-01-10",status:"Pago"},
+  {id:102,type:"Saída",desc:"Freelancer Design",value:900,date:"2026-01-15",status:"Pendente"},
+  {id:103,type:"Saída",desc:"Operação interna",value:1800,date:"2026-01-05",status:"Previsto"}
+ ],
+ employees:[
+  {id:1,name:"Alice",role:"Social Media",cost:1800,effort:92,feedbacks:18,improvements:14,skills:{Design:78,Copy:82,Programação:88},notes:"Boa evolução em programação e rotina de aprovação."},
+  {id:2,name:"Eduardo",role:"Direção / Comercial",cost:4000,effort:95,feedbacks:23,improvements:19,skills:{Estratégia:96,Comercial:92,Copy:89},notes:"Responsável por estratégia, cliente e fechamento."},
+  {id:3,name:"Design",role:"Criação",cost:1500,effort:86,feedbacks:12,improvements:10,skills:{Design:93,Vídeo:80,Branding:88},notes:"Atenção especial a prazos e padronização visual."}
+ ],
+ tasks:[
+  {id:1,title:"Programar stories da Aldeia",client:"Aldeia das Ervas",resp:"Alice",due:"Hoje 16:00",status:"Em andamento",priority:"Alta"},
+  {id:2,title:"Revisar contrato da Êxito",client:"Êxito Cobranças",resp:"Eduardo",due:"Amanhã 10:00",status:"Pendente",priority:"Alta"},
+  {id:3,title:"Criar capa da Ideação",client:"Ideação Cenografia",resp:"Design",due:"Sexta 14:00",status:"Em produção",priority:"Média"}
+ ]
+};
+
+function save(){
+ try{
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY+"_saved_at",new Date().toISOString());
+  showSaveStatus();
+ }catch(e){
+  alert("Não consegui salvar no navegador. Exporte um backup para não perder os dados.");
+ }
+}
+function showSaveStatus(){
+ const el=document.getElementById("saveToast");
+ if(!el)return;
+ const savedAt=localStorage.getItem(STORAGE_KEY+"_saved_at");
+ let label="Alterações salvas";
+ if(savedAt){
+  const d=new Date(savedAt);
+  label=`Salvo às ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+ }
+ el.textContent=label;
+ el.classList.add("show");
+ clearTimeout(window.__saveToastTimer);
+ window.__saveToastTimer=setTimeout(()=>el.classList.remove("show"),1600);
+}
+function manualSave(){
+ normalizeData();
+ syncActiveClientsToFinance();
+ save();
+ renderAll();
+checkPaymentAlerts(false);
+}
+function exportBackup(){
+ normalizeData();
+ syncActiveClientsToFinance();
+ const payload={
+  exportedAt:new Date().toISOString(),
+  system:"V-Deal System",
+  version:"backup-1",
+  data
+ };
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="vdeal-system-backup.json";
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ URL.revokeObjectURL(url);
+ showSaveStatus();
+}
+function importBackup(event){
+ const file=event.target.files && event.target.files[0];
+ if(!file)return;
+ const reader=new FileReader();
+ reader.onload=function(){
+  try{
+   const payload=JSON.parse(reader.result);
+   data=payload.data || payload;
+   normalizeData();
+   syncActiveClientsToFinance();
+   save();
+   renderAll();
+   alert("Backup importado com sucesso.");
+  }catch(e){
+   alert("Não consegui importar este arquivo. Verifique se é um backup JSON do V-Deal System.");
+  }
+ };
+ reader.readAsText(file);
+ event.target.value="";
+}
+window.addEventListener("beforeunload",()=>{try{save()}catch(e){}});
+
+function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+
+function moneyCompact(v){
+ v=Number(v||0);
+ if(Math.abs(v)>=1000) return "R$ "+(v/1000).toLocaleString("pt-BR",{maximumFractionDigits:1})+"k";
+ return money(v);
+}
+
+
+
+
+
+
+
+
+
+function isClientActiveStatus(status){
+ return ["Ativo","Em onboarding"].includes(status);
+}
+function isContractActiveStatus(status){
+ return ["Ativo","Em onboarding"].includes(status);
+}
+function isPayingClientName(name){
+ const client=data.clients.find(c=>c.name===name);
+ const contract=data.contracts.find(c=>c.client===name);
+ return (!!client && isClientActiveStatus(client.status)) || (!!contract && isContractActiveStatus(contract.status));
+}
+function activePayingClients(){
+ return data.clients.filter(c=>isPayingClientName(c.name));
+}
+function activePayingContracts(){
+ return data.contracts.filter(c=>isPayingClientName(c.client) && isContractActiveStatus(c.status));
+}
+function removeInactiveEntriesFromFinance(){
+ data.finance=(data.finance||[]).filter(f=>{
+  if(f.type!=="Entrada") return true;
+  return isPayingClientName(f.desc);
+ });
+}
+function syncActiveClientsToFinance(){
+ removeInactiveEntriesFromFinance();
+ const selectedYear=2026;
+ const mm=String((typeof financeMonth==="number"?financeMonth:4)+1).padStart(2,"0");
+
+ activePayingClients().forEach(c=>{
+  const contract=data.contracts.find(ct=>ct.client===c.name && isContractActiveStatus(ct.status));
+  const value=Number((contract?contract.monthly:c.value)||0);
+  const payDay=Number((contract?contract.payDay:c.payDay)||1);
+  let row=data.finance.find(f=>f.type==="Entrada" && f.desc===c.name && String(f.date||"").startsWith(`${selectedYear}-${mm}-`));
+  if(!row){
+   data.finance.push({
+    id:Date.now()+Math.floor(Math.random()*9999),
+    type:"Entrada",
+    desc:c.name,
+    value,
+    date:`${selectedYear}-${mm}-${String(payDay).padStart(2,"0")}`,
+    status:"Previsto"
+   });
+  }else{
+   row.value=value;
+   const currentStatus=row.status || "Previsto";
+   row.status=currentStatus==="Inativo" ? "Previsto" : currentStatus;
+   row.date=`${selectedYear}-${mm}-${String(payDay).padStart(2,"0")}`;
+  }
+ });
+}
+
+function seedMayFinance(){
+ // Maio de 2026 como referência operacional atual.
+ const mayEntries=[
+  {client:"Êxito Cobranças", value:1500, day:15, status:"Pago"},
+  {client:"Hilarion Trading", value:1500, day:20, status:"Pago"},
+  {client:"Ideação Cenografia", value:1800, day:28, status:"Pago"},
+  {client:"Aldeia das Ervas", value:1500, day:28, status:"Pendente"}
+ ];
+
+ mayEntries.forEach(item=>{
+  let c=data.clients.find(x=>x.name===item.client);
+  if(!c){
+   data.clients.push({
+    id:Date.now()+Math.floor(Math.random()*9999),
+    name:item.client,
+    segment:"Cliente ativo",
+    value:item.value,
+    payDay:item.day,
+    status:"Ativo",
+    resp:"Eduardo",
+    duration:12,
+    scenario:"Cliente ativo sincronizado com o financeiro de maio.",
+    contracted:["Gestão digital","Conteúdo","Suporte"]
+   });
+  }else{
+   c.status="Ativo";
+   c.value=item.value;
+   c.payDay=item.day;
+  }
+
+  let ct=data.contracts.find(x=>x.client===item.client);
+  if(!ct){
+   data.contracts.push({
+    id:Date.now()+Math.floor(Math.random()*9999),
+    client:item.client,
+    monthly:item.value,
+    start:"2026-01-01",
+    duration:12,
+    payDay:item.day,
+    status:"Ativo",
+    resp:"Eduardo",
+    scope:"Gestão digital, conteúdo, suporte e planejamento mensal."
+   });
+  }else{
+   ct.status="Ativo";
+   ct.monthly=item.value;
+   ct.payDay=item.day;
+  }
+
+  let f=data.finance.find(x=>x.type==="Entrada" && x.desc===item.client && x.date.startsWith("2026-05-"));
+  if(!f){
+   data.finance.push({
+    id:Date.now()+Math.floor(Math.random()*9999),
+    type:"Entrada",
+    desc:item.client,
+    value:item.value,
+    date:`2026-05-${String(item.day).padStart(2,"0")}`,
+    status:item.status
+   });
+  }else{
+   f.value=item.value;
+   f.date=`2026-05-${String(item.day).padStart(2,"0")}`;
+   f.status=item.status;
+  }
+ });
+
+ // Pagamento semanal da Alice: 500 / 200 / 500 / 200 = R$ 1.400 no mês.
+ const alicePayments=[
+  {desc:"Alice - pagamento semanal 1", value:500, date:"2026-05-03"},
+  {desc:"Alice - pagamento semanal 2", value:200, date:"2026-05-10"},
+  {desc:"Alice - pagamento semanal 3", value:500, date:"2026-05-17"},
+  {desc:"Alice - pagamento semanal 4", value:200, date:"2026-05-24"}
+ ];
+ alicePayments.forEach(item=>{
+  let f=data.finance.find(x=>x.type==="Saída" && x.desc===item.desc && x.date===item.date);
+  if(!f){
+   data.finance.push({
+    id:Date.now()+Math.floor(Math.random()*9999),
+    type:"Saída",
+    desc:item.desc,
+    value:item.value,
+    date:item.date,
+    status:"Pago"
+   });
+  }else{
+   f.value=item.value;
+   f.status="Pago";
+  }
+ });
+}
+
+function normalizeData(){
+ removeInactiveEntriesFromFinance();
+ let changed=false;
+ data.clients=data.clients||[];
+ data.contracts=data.contracts||[];
+ data.finance=data.finance||[];
+ data.contents=data.contents||[];
+
+ // Remove totalmente do financeiro as entradas ligadas a clientes inativos, pausados ou encerrados.
+ data.finance=data.finance.filter(f=>{
+  if(f.type!=="Entrada") return true;
+  return isPayingClientName(f.desc);
+ });
+
+ 
+ // Regra final do caixa: contrato ativo/onboarding força cliente como pagante.
+ data.contracts.forEach(ct=>{
+  if(isContractActiveStatus(ct.status)){
+   const cl=data.clients.find(c=>c.name===ct.client);
+   if(cl && !isClientActiveStatus(cl.status)){
+    cl.status="Ativo";
+    changed=true;
+   }
+  }
+ });
+
+ data.contracts.forEach(ct=>{
+  ct.status=ct.status||"Ativo";
+  ct.duration=Number(ct.duration||1);
+  ct.monthly=Number(ct.monthly||0);
+  ct.payDay=Number(ct.payDay||1);
+
+  let client=data.clients.find(c=>c.name===ct.client);
+  const contracted=(ct.scope||"Escopo contratado").split(",").map(x=>x.trim()).filter(Boolean);
+
+  if(!client){
+   data.clients.push({
+    id:Date.now()+Math.floor(Math.random()*9999),
+    name:ct.client,
+    segment:"Cliente cadastrado via contratos",
+    value:ct.monthly,
+    payDay:ct.payDay,
+    status:isContractActiveStatus(ct.status)?"Ativo":"Inativo",
+    resp:ct.resp||"Eduardo",
+    duration:ct.duration,
+    scenario:"Cliente sincronizado automaticamente a partir do menu Contratos.",
+    contracted:contracted.length?contracted:["Escopo contratado"]
+   });
+   changed=true;
+  }else{
+   if(!client.value){client.value=ct.monthly;changed=true}
+   if(!client.payDay){client.payDay=ct.payDay;changed=true}
+   if(!client.duration){client.duration=ct.duration;changed=true}
+   if(!client.contracted||!client.contracted.length){client.contracted=contracted;changed=true}
+   if(isContractActiveStatus(ct.status) && !isClientActiveStatus(client.status)){client.status="Ativo";changed=true}
+   if(!isContractActiveStatus(ct.status) && isClientActiveStatus(client.status)){client.status="Inativo";changed=true}
+  }
+
+  let fin=data.finance.find(f=>f.type==="Entrada" && f.desc===ct.client);
+  const month=String(new Date(ct.start+"T00:00:00").getMonth()+1).padStart(2,"0");
+  const day=String(ct.payDay||1).padStart(2,"0");
+  const yearFin=new Date(ct.start+"T00:00:00").getFullYear()||2026;
+
+  if(isContractActiveStatus(ct.status)){
+   if(!fin){
+    data.finance.push({
+     id:Date.now()+Math.floor(Math.random()*9999),
+     type:"Entrada",
+     desc:ct.client,
+     value:ct.monthly,
+     date:`${yearFin}-${month}-${day}`,
+     status:"Previsto"
+    });
+    changed=true;
+   }else{
+    if(Number(fin.value)!==Number(ct.monthly)){fin.value=ct.monthly;changed=true}
+    if(fin.status==="Inativo"){fin.status="Previsto";changed=true}
+   }
+  }else{
+   if(fin){
+    data.finance=data.finance.filter(f=>!(f.type==="Entrada" && f.desc===ct.client));
+    changed=true;
+   }
+  }
+ });
+
+ data.clients.forEach(c=>{
+  c.duration=Number(c.duration||1);
+  c.value=Number(c.value||0);
+  c.payDay=Number(c.payDay||1);
+
+  let fin=data.finance.find(f=>f.type==="Entrada" && f.desc===c.name);
+  if(isPayingClientName(c.name)){
+   if(!fin){
+    data.finance.push({
+     id:Date.now()+Math.floor(Math.random()*9999),
+     type:"Entrada",
+     desc:c.name,
+     value:c.value,
+     date:`2026-01-${String(c.payDay).padStart(2,"0")}`,
+     status:"Previsto"
+    });
+    changed=true;
+   }
+  }else if(fin){
+   data.finance=data.finance.filter(f=>!(f.type==="Entrada" && f.desc===c.name));
+   changed=true;
+  }
+
+  let ct=data.contracts.find(x=>x.client===c.name);
+  if(!ct && isClientActiveStatus(c.status)){
+   data.contracts.push({
+    id:Date.now()+Math.floor(Math.random()*9999),
+    client:c.name,
+    monthly:c.value,
+    start:"2026-01-01",
+    duration:c.duration||1,
+    payDay:c.payDay,
+    status:"Ativo",
+    resp:c.resp||"Eduardo",
+    scope:(c.contracted&&c.contracted.length?c.contracted.join(", "):"Escopo contratado")
+   });
+   changed=true;
+  }
+ });
+
+ if(changed) save();
+}
+
+function q(){return (document.getElementById("globalSearch").value||"").toLowerCase()}
+function filtered(arr,keys){let s=q();return !s?arr:arr.filter(x=>keys.some(k=>String(x[k]||"").toLowerCase().includes(s)))}
+
+function go(page,btn){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(page).classList.add("active");
+ document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ const titles={
+  dashboard:["Dashboard Geral","Gestão, vendas, operação e lucro no mesmo painel."],
+  crm:["CRM Comercial","Vendas com impacto no caixa."],
+  clientes:["Clientes","Cenário, escopo contratado e situação de cada cliente."],
+  agenda:["Agenda Editorial","Calendário mensal com canais, formatos, horários e responsáveis."],
+  contratos:["Contratos","Booking anual e escopo contratado."],
+  financeiro:["Financeiro","Entradas, saídas e lucro previsto."],
+  operacao:["Operação","Tarefas, perfil da equipe, feedbacks e melhorias."],
+  funcionarios:["Funcionários","Custos, habilidades e desempenho."],
+  relatorios:["Relatórios","Visão estratégica da agência."],
+  config:["Configurações","Personalização do sistema."]
+ };
+ document.getElementById("pageTitle").textContent=titles[page][0];
+ document.getElementById("pageSub").textContent=titles[page][1];
+ renderAll();
+}
+function goById(id){
+ const btn=[...document.querySelectorAll(".nav")].find(b=>b.getAttribute("onclick")&&b.getAttribute("onclick").includes("'"+id+"'"));
+ go(id,btn);
+}
+
+function kpi(label,value,sub){return `<div class="card"><label>${label}</label><strong>${value}</strong><span>${sub}</span></div>`}
+
+function getNotifyDays(){
+ return Number(localStorage.getItem(STORAGE_KEY+"_notify_days")||3);
+}
+function setNotifyDays(v){
+ v=Math.max(1,Math.min(15,Number(v||3)));
+ localStorage.setItem(STORAGE_KEY+"_notify_days",String(v));
+ const input=document.getElementById("notifyDaysInput");
+ if(input) input.value=v;
+ checkPaymentAlerts(true);
+}
+function dismissedAlertKey(clientName, dateStr){
+ return `${clientName}_${dateStr}`;
+}
+function getDismissedAlerts(){
+ try{return JSON.parse(localStorage.getItem(STORAGE_KEY+"_dismissed_alerts")||"[]")}catch(e){return []}
+}
+function setDismissedAlerts(list){
+ localStorage.setItem(STORAGE_KEY+"_dismissed_alerts",JSON.stringify(list));
+}
+function dismissPaymentAlert(keys){
+ const current=new Set(getDismissedAlerts());
+ keys.forEach(k=>current.add(k));
+ setDismissedAlerts([...current]);
+ const dock=document.getElementById("notificationDock");
+ if(dock) dock.innerHTML="";
+}
+function clearDismissedAlerts(){
+ setDismissedAlerts([]);
+ checkPaymentAlerts(true);
+}
+function daysUntilPayment(payDay, baseDate){
+ const year=baseDate.getFullYear();
+ const month=baseDate.getMonth();
+ let target=new Date(year,month,Number(payDay||1));
+ target.setHours(0,0,0,0);
+ const today=new Date(baseDate);
+ today.setHours(0,0,0,0);
+ let diff=Math.round((target-today)/(1000*60*60*24));
+ if(diff<0){
+  target=new Date(year,month+1,Number(payDay||1));
+  target.setHours(0,0,0,0);
+  diff=Math.round((target-today)/(1000*60*60*24));
+ }
+ return {diff,target};
+}
+function checkPaymentAlerts(force=false){
+ const dock=document.getElementById("notificationDock");
+ if(!dock) return;
+
+ const notifyDays=getNotifyDays();
+ const input=document.getElementById("notifyDaysInput");
+ if(input) input.value=notifyDays;
+
+ // Referência de teste: se o financeiro está em maio, usa 26/05/2026 para bater com o cenário atual.
+ // Em uso real, trocará automaticamente para a data do computador.
+ const realToday=new Date();
+ const baseDate=(typeof financeMonth==="number" && financeMonth===4) ? new Date(2026,4,26) : realToday;
+
+ const dismissed=new Set(getDismissedAlerts());
+ const activeContracts=activePayingContracts();
+
+ const alerts=activeContracts.map(c=>{
+  const p=daysUntilPayment(c.payDay,baseDate);
+  const dateStr=p.target.toISOString().slice(0,10);
+  return {
+   key:dismissedAlertKey(c.client,dateStr),
+   client:c.client,
+   value:Number(c.monthly||0),
+   payDay:Number(c.payDay||1),
+   days:p.diff,
+   date:p.target,
+   status:c.status
+  };
+ }).filter(a=>a.days>=0 && a.days<=notifyDays && !dismissed.has(a.key))
+   .sort((a,b)=>a.days-b.days || a.payDay-b.payDay);
+
+ if(!alerts.length && !force){
+  dock.innerHTML="";
+  return;
+ }
+
+ if(!alerts.length && force){
+  dock.innerHTML=`<div class="payment-alert">
+    <div class="payment-alert-head">
+      <div>
+        <h4>Nenhuma cobrança nos próximos ${notifyDays} dias</h4>
+        <p>Clientes ativos e em onboarding serão avisados aqui quando estiverem perto do vencimento.</p>
+      </div>
+      <button class="alert-close" onclick="document.getElementById('notificationDock').innerHTML=''">×</button>
+    </div>
+  </div>`;
+  return;
+ }
+
+ const keys=alerts.map(a=>a.key);
+ const title=alerts.length===1 ? "Cobrança próxima" : `${alerts.length} cobranças próximas`;
+ const list=alerts.map(a=>{
+  const when=a.days===0 ? "vence hoje" : a.days===1 ? "vence amanhã" : `vence em ${a.days} dias`;
+  return `<div class="payment-alert-item">
+    <div><b>${a.client}</b><small>Dia ${a.payDay} · ${when}</small></div>
+    <strong>${money(a.value)}</strong>
+  </div>`;
+ }).join("");
+
+ dock.innerHTML=`<div class="payment-alert">
+  <div class="payment-alert-head">
+    <div>
+      <h4>${title}</h4>
+      <p>Alerta automático até ${notifyDays} dias antes do pagamento. Hora de cobrar ou confirmar recebimento.</p>
+    </div>
+    <button class="alert-close" onclick='dismissPaymentAlert(${JSON.stringify(keys)})'>×</button>
+  </div>
+  <div class="payment-alert-list">${list}</div>
+  <div class="alert-actions">
+    <button class="ghost" onclick='dismissPaymentAlert(${JSON.stringify(keys)})'>Dispensar</button>
+    <button class="primary" onclick="goById('financeiro')">Abrir financeiro</button>
+  </div>
+ </div>`;
+}
+
+function renderAll(){normalizeData();syncActiveClientsToFinance();renderDashboard();renderCRM();renderClients();renderCalendar();renderContracts();renderFinance();renderOperation();renderEmployees();renderReports();checkPaymentAlerts(false)}
+
+function contractMonths(c){
+ let st=new Date(c.start+"T00:00:00"),a=[];
+ for(let i=0;i<Number(c.duration||0);i++){
+  let d=new Date(st);d.setMonth(st.getMonth()+i);
+  a.push({year:d.getFullYear(),month:d.getMonth()});
+ }
+ return a;
+}
+function contractBookingYear(c,y){return contractMonths(c).filter(m=>m.year===y).length*Number(c.monthly||0)}
+
+
+
+function renderDashboard(){
+ syncActiveClientsToFinance();
+ const activeContracts=activePayingContracts();
+ const activeClients=activePayingClients();
+ const mrr=activeContracts.reduce((s,c)=>s+Number(c.monthly||0),0);
+ const booking=activeContracts.reduce((s,c)=>s+contractBookingYear(c,year),0);
+ const out=data.finance.filter(f=>f.type==="Saída").reduce((s,f)=>s+Number(f.value||0),0);
+ const monthEntries=data.finance.filter(f=>f.type==="Entrada" && isPayingClientName(f.desc) && financeEntryMonth(f)===financeMonth);
+ const received=monthEntries.filter(f=>f.status==="Pago").reduce((s,f)=>s+Number(f.value||0),0);
+ const pending=monthEntries.filter(f=>f.status!=="Pago").reduce((s,f)=>s+Number(f.value||0),0);
+ const receivePct=mrr>0?Math.min(100,Math.round((received/mrr)*100)):0;
+ const avgTicket=activeClients.length?mrr/activeClients.length:0;
+
+ document.getElementById("dashboardKpis").innerHTML=
+  kpi("MRR ativo",money(mrr),"Receita mensal dos clientes pagantes")+
+  kpi("Booking ativo anual",money(booking),`Contratos ativos em ${year}`)+
+  kpi("Recebido no mês",money(received),`${receivePct}% do MRR ativo`) +
+  kpi("Falta receber",money(pending),"Pendências de clientes ativos");
+
+ const monthValues=months.map((m,i)=>{
+  return activeContracts.filter(c=>contractMonths(c).some(x=>x.year===year&&x.month===i)).reduce((s,c)=>s+Number(c.monthly||0),0);
+ });
+ const maxMonth=Math.max(...monthValues,1);
+ const bars=monthValues.map((v,i)=>{
+  const h=Math.max(8,Math.round((v/maxMonth)*220));
+  return `<div class="chart-bar" style="height:${h}px" title="${months[i]}: ${money(v)}"><small>${moneyCompact(v)}</small><span>${months[i]}</span></div>`;
+ }).join("");
+
+ const topClients=[...activeContracts].sort((a,b)=>Number(b.monthly||0)-Number(a.monthly||0)).slice(0,5);
+ const topTotal=topClients.reduce((s,c)=>s+Number(c.monthly||0),0)||1;
+ const topRows=topClients.map(c=>{
+  const pct=Math.round((Number(c.monthly||0)/topTotal)*100);
+  return `<div class="progress-row">
+    <div class="progress-head"><span>${c.client}</span><span>${money(c.monthly)}</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+  </div>`;
+ }).join("");
+
+ const nextRows=[...activeContracts].sort((a,b)=>a.payDay-b.payDay).slice(0,6).map(c=>`
+  <div class="dashboard-client-row">
+    <div><b>${c.client}</b><br><small>Pagamento dia ${c.payDay} · ${c.status}</small></div>
+    <strong>${money(c.monthly)}</strong>
+  </div>`).join("");
+
+ const charts=document.getElementById("dashboardProCharts");
+ if(charts){
+  charts.innerHTML=`
+   <div class="pro-panel">
+    <div class="section-head">
+      <div><h3>Booking ativo mês a mês</h3><p>Previsão anual somente com contratos ativos.</p></div>
+      <span class="pill black">${year}</span>
+    </div>
+    <div class="chart-bars">${bars}</div>
+   </div>
+
+   <div class="pro-panel dark">
+    <div class="section-head">
+      <div><h3>Recebimento do mês</h3><p>Quanto do MRR ativo já entrou no caixa.</p></div>
+      <span class="pill">${months[financeMonth]}</span>
+    </div>
+    <div class="donut-wrap">
+      <div class="donut" style="--pct:${receivePct}%">
+        <div class="donut-inner"><div><strong>${receivePct}%</strong><span>recebido</span></div></div>
+      </div>
+      <div class="legend-list">
+        <div class="legend-item"><span><i class="legend-dot"></i>Recebido</span><b>${money(received)}</b></div>
+        <div class="legend-item"><span><i class="legend-dot" style="background:#fff"></i>Pendente</span><b>${money(pending)}</b></div>
+        <div class="legend-item"><span><i class="legend-dot" style="background:#22C55E"></i>MRR ativo</span><b>${money(mrr)}</b></div>
+      </div>
+    </div>
+   </div>
+
+   <div class="pro-panel">
+    <div class="section-head">
+      <div><h3>Indicadores comerciais</h3><p>Visão rápida da saúde da carteira ativa.</p></div>
+    </div>
+    <div class="big-indicator">
+      <div class="big-mini"><label>Clientes pagantes</label><strong>${activeClients.length}</strong><span class="muted">Ativos + onboarding</span></div>
+      <div class="big-mini"><label>Ticket médio</label><strong>${money(avgTicket)}</strong><span class="muted">MRR / clientes</span></div>
+      <div class="big-mini"><label>Saídas previstas</label><strong>${money(out)}</strong><span class="muted">Despesas cadastradas</span></div>
+    </div>
+    <div class="progress-list">${topRows}</div>
+   </div>
+
+   <div class="pro-panel">
+    <div class="section-head">
+      <div><h3>Próximas entradas</h3><p>Clientes ativos ordenados por dia de pagamento.</p></div>
+    </div>
+    <div class="dashboard-client-list">${nextRows}</div>
+   </div>`;
+ }
+
+ document.getElementById("operationPreview").innerHTML=data.employees.map(e=>`<div class="employee-card"><b>${e.name} · ${e.effort}% empenho</b><div class="mini">${e.feedbacks} feedbacks · ${e.improvements} melhorias aplicadas</div></div>`).join("");
+ const rows=[...activeContracts].sort((a,b)=>a.payDay-b.payDay).slice(0,8);
+ document.getElementById("cashPreview").innerHTML=`<tr><th>Cliente ativo</th><th>Dia</th><th>Valor</th><th>Status</th></tr>`+
+  rows.map(c=>`<tr><td>${c.client}</td><td>${c.payDay}</td><td>${money(c.monthly)}</td><td><span class="pill green">${c.status}</span></td></tr>`).join("");
+}
+
+
+
+function renderCRM(){
+ const leads=filtered(data.leads,["name","stage","origin","resp"]);
+ const total=leads.reduce((s,l)=>s+Number(l.value),0);
+ const before15=leads.filter(l=>Number(l.payDay)<=15).reduce((s,l)=>s+Number(l.value),0);
+ document.getElementById("crmKpis").innerHTML=
+  kpi("Potencial mensal",money(total),"Soma das oportunidades")+
+  kpi("Entradas até dia 15",money(before15),"Ajuda no caixa inicial")+
+  kpi("Leads no funil",leads.length,"Oportunidades ativas")+
+  kpi("Ticket médio",money(total/(leads.length||1)),"Valor médio");
+ const stages=["Novo Lead","Em conversa","Reunião marcada","Proposta enviada","Fechado"];
+ document.getElementById("kanban").innerHTML=stages.map(st=>`<div class="column" ondragover="event.preventDefault()" ondrop="dropLead(event,'${st}')"><h4>${st}<span>${leads.filter(l=>l.stage===st).length}</span></h4>${leads.filter(l=>l.stage===st).map(l=>`<div class="lead-card" draggable="true" ondragstart="dragLead(event,${l.id})"><b>${l.name}</b><div class="mini">${money(l.value)} · pagamento dia ${l.payDay}</div><div class="mini">${l.origin} · ${l.resp}</div><div class="actions" style="margin-top:10px"><button class="small yellow" onclick="closeLead(${l.id})">Fechar</button><button class="small red" onclick="delLead(${l.id})">Excluir</button></div></div>`).join("")}</div>`).join("");
+}
+function dragLead(e,id){e.dataTransfer.setData("lead",id)}
+function dropLead(e,stage){let id=Number(e.dataTransfer.getData("lead"));let l=data.leads.find(x=>x.id===id);if(l){l.stage=stage;save();renderCRM()}}
+function closeLead(id){
+ let l=data.leads.find(x=>x.id===id);
+ if(l){l.stage="Fechado";data.clients.push({id:Date.now(),name:l.name,segment:l.origin,value:l.value,payDay:l.payDay,status:"Ativo",resp:l.resp,scenario:"Cliente fechado pelo CRM. Cenário será detalhado no onboarding.",contracted:["Contrato a definir","Onboarding","Planejamento"]});save();renderAll()}
+}
+function delLead(id){data.leads=data.leads.filter(l=>l.id!==id);save();renderAll()}
+function deleteLastLead(){data.leads.pop();save();renderAll()}
+
+
+
+function setClientFilter(filter){
+ clientStatusFilter=filter;
+ renderClients();
+}
+function renderClients(){
+ const allClients=filtered(data.clients,["name","segment","status","resp","scenario"]);
+ const activeCount=allClients.filter(c=>isClientActiveStatus(c.status)).length;
+ const inactiveCount=allClients.filter(c=>!isClientActiveStatus(c.status)).length;
+
+ const btnA=document.getElementById("filterAtivos");
+ const btnI=document.getElementById("filterInativos");
+ if(btnA&&btnI){
+  btnA.classList.toggle("active",clientStatusFilter==="ativos");
+  btnI.classList.toggle("active",clientStatusFilter==="inativos");
+ }
+ const countA=document.getElementById("countAtivos");
+ const countI=document.getElementById("countInativos");
+ if(countA) countA.textContent=activeCount;
+ if(countI) countI.textContent=inactiveCount;
+
+ const clients=allClients.filter(c=>clientStatusFilter==="ativos"?isClientActiveStatus(c.status):!isClientActiveStatus(c.status));
+ const total=clients.reduce((s,c)=>s+Number(c.value||0),0);
+ const active=clients.filter(c=>isClientActiveStatus(c.status)).length;
+ const before15=clients.filter(c=>Number(c.payDay)<=15).reduce((s,c)=>s+Number(c.value||0),0);
+ const totalBooking=clients.reduce((s,c)=>s+(Number(c.value||0)*Number(c.duration||0)),0);
+
+ document.getElementById("clientKpis").innerHTML=
+  kpi(clientStatusFilter==="ativos"?"Clientes ativos/onboarding":"Clientes inativos",clients.length,clientStatusFilter==="ativos"?"Ativos + onboarding":"Pausados, inativos e encerrados")+
+  kpi("Receita mensal",money(total),"Soma do grupo filtrado")+
+  kpi("Booking em carteira",money(totalBooking),"Mensalidade × duração")+
+  kpi("Entradas até dia 15",money(before15),"Impacto no caixa inicial");
+
+ document.getElementById("clientsGrid").innerHTML=clients.map(c=>{
+  const related=data.contracts.find(ct=>ct.client===c.name);
+  const contracted=(c.contracted&&c.contracted.length?c.contracted:(related?related.scope.split(","):["Escopo não informado"]));
+  const duration=Number(c.duration || (related?related.duration:1) || 1);
+  const booking=Number(c.value||0)*duration;
+  return `<div class="client-card">
+    <div class="section-head" style="margin-bottom:8px">
+      <div style="width:100%">
+        <span class="edit-label">Nome do cliente</span>
+        <input class="inline-edit" value="${escapeAttr(c.name)}" onchange="updateClientField(${c.id},'name',this.value)">
+        <p>${c.segment}</p>
+      </div>
+      <span class="pill ${isClientActiveStatus(c.status)?"green":"black"}">${c.status}</span>
+    </div>
+
+    <div class="grid kpis" style="grid-template-columns:1fr 1fr;gap:10px">
+      <div class="card" style="box-shadow:none;padding:12px">
+        <label>Mensalidade</label>
+        <input class="inline-edit" type="number" value="${c.value||0}" onchange="updateClientField(${c.id},'value',this.value)">
+        <span>Pagamento dia ${c.payDay}</span>
+      </div>
+      <div class="card" style="box-shadow:none;padding:12px">
+        <label>Status</label>
+        <select class="inline-edit" onchange="updateClientField(${c.id},'status',this.value)">
+          <option ${c.status==="Ativo"?"selected":""}>Ativo</option>
+          <option ${c.status==="Em onboarding"?"selected":""}>Em onboarding</option>
+          <option ${c.status==="Pausado"?"selected":""}>Pausado</option>
+          <option ${c.status==="Inativo"?"selected":""}>Inativo</option>
+          <option ${c.status==="Encerrado"?"selected":""}>Encerrado</option>
+        </select>
+        <span>Responsável: ${c.resp}</span>
+      </div>
+    </div>
+
+    <div class="contract-duration-box" style="margin-top:12px">
+      <div class="two">
+        <div>
+          <span class="edit-label">Duração do contrato</span>
+          <input class="inline-edit" type="number" min="1" value="${duration}" onchange="updateClientField(${c.id},'duration',this.value)">
+        </div>
+        <div>
+          <span class="edit-label">Booking deste cliente</span>
+          <strong style="font-size:22px">${money(booking)}</strong>
+          <span class="muted">mensalidade × ${duration} meses</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scope-hero">
+      <b>O que este cliente contratou</b>
+      <div class="scope-list big">${contracted.map(item=>`<span class="scope-tag">${String(item).trim()}</span>`).join("")}</div>
+    </div>
+
+    <div class="scenario">
+      <b>Cenário atual</b>
+      <p class="muted" style="margin:6px 0 0">${c.scenario||"Cenário ainda não registrado."}</p>
+    </div>
+
+    <div class="actions" style="margin-top:14px">
+      <button class="small yellow" onclick="editClient(${c.id})">Editar tudo</button>
+      <button class="small red" onclick="deleteClient(${c.id})">Excluir</button>
+    </div>
+  </div>`;
+ }).join("") || `<div class="card"><h3>Nenhum cliente neste grupo</h3><p class="muted">Troque o filtro ou cadastre um novo cliente.</p></div>`;
+}
+function escapeAttr(v){return String(v||"").replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+function updateClientField(id,field,value){
+ const c=data.clients.find(x=>x.id===id);
+ if(!c)return;
+ if(field==="value") value=Number(value||0);
+ if(field==="duration") value=Number(value||1);
+ const oldName=c.name;
+ c[field]=value;
+ if(field==="name"){
+  data.contracts.forEach(ct=>{if(ct.client===oldName)ct.client=value});
+  data.contents.forEach(co=>{if(co.client===oldName)co.client=value});
+  data.finance.forEach(f=>{if(f.desc===oldName)f.desc=value});
+ }
+ if(field==="value"){
+  data.contracts.forEach(ct=>{if(ct.client===c.name)ct.monthly=value});
+  data.finance.forEach(f=>{if(f.desc===c.name&&f.type==="Entrada")f.value=value});
+ }
+ if(field==="duration"){
+  data.contracts.forEach(ct=>{if(ct.client===c.name)ct.duration=value});
+ }
+ if(field==="status"){
+  data.contracts.forEach(ct=>{if(ct.client===c.name)ct.status=(isClientActiveStatus(value)?"Ativo":"Pausado")});
+  if(!isClientActiveStatus(value)){
+   data.finance=data.finance.filter(f=>!(f.type==="Entrada" && f.desc===c.name));
+  }
+ }
+ removeInactiveEntriesFromFinance();syncActiveClientsToFinance();save();renderAll();
+}
+function deleteClient(id){data.clients=data.clients.filter(c=>c.id!==id);save();renderAll()}
+function editClient(id){
+ const c=data.clients.find(x=>x.id===id);
+ if(!c)return;
+ openModal("client");
+ setTimeout(()=>{
+  mClientName.value=c.name||"";
+  mClientSegment.value=c.segment||"";
+  mClientValue.value=c.value||0;
+  mClientPay.value=c.payDay||1;
+  mClientResp.value=c.resp||"Eduardo";
+  mClientStatus.value=c.status||"Ativo";
+  if(typeof mClientDuration!=="undefined") mClientDuration.value=c.duration||1;
+  mClientScenario.value=c.scenario||"";
+  mClientContracted.value=(c.contracted||[]).join(", ");
+  data.clients=data.clients.filter(x=>x.id!==id);
+  save();
+ },0);
+}
+
+function renderCalendar(){
+ const activeClients=data.clients.filter(c=>isClientActiveStatus(c.status));
+ document.getElementById("clientChips").innerHTML=activeClients.map(c=>`<div class="client-chip" draggable="true" ondragstart="dragClient(event,'${escapeAttr(c.name)}')">${c.name}<div class="mini">${c.status} · ${c.resp}</div></div>`).join("") || `<div class="card"><b>Nenhum cliente ativo</b><p class="muted">Mude o status de um cliente para Ativo ou Em onboarding na aba Clientes.</p></div>`;
+ const ch=document.getElementById("filterChannel").value, resp=document.getElementById("filterResp").value;
+ const activeNames=activeClients.map(c=>c.name);
+ let days=31, html="";
+ for(let d=1;d<=days;d++){
+  let ev=data.contents.filter(c=>
+    c.day===d &&
+    activeNames.includes(c.client) &&
+    (ch==="Todos"||c.channel===ch) &&
+    (resp==="Todos"||c.resp===resp)
+  );
+  html+=`<div class="day" ondragover="event.preventDefault()" ondrop="dropClient(event,${d})"><div class="num">${d}</div>${ev.map(c=>`<div class="event">${c.time} · ${c.client}<small>${c.channel} · ${c.format} · ${c.resp}</small></div>`).join("")}</div>`;
+ }
+ document.getElementById("calendarGrid").innerHTML=html;
+}
+function dragClient(e,name){e.dataTransfer.setData("client",name)}
+function dropClient(e,day){
+ let client=e.dataTransfer.getData("client");
+ const c=data.clients.find(x=>x.name===client);
+ if(!c || !isPayingClientName(c.name)){
+  alert("Este cliente não está ativo ou em onboarding, então não pode entrar na agenda editorial.");
+  return;
+ }
+ data.contents.push({id:Date.now(),client,day,time:"09:00",channel:"Instagram",format:"Feed",resp:c.resp||"Alice",status:"Planejado",theme:"Novo conteúdo"});
+ save();renderCalendar();
+}
+
+
+function setContractFilter(filter){
+ contractStatusFilter=filter;
+ renderContracts();
+}
+function renderContracts(){
+ const allContracts=[...data.contracts];
+ const activeContracts=allContracts.filter(c=>isContractActiveStatus(c.status));
+ const inactiveContracts=allContracts.filter(c=>!isContractActiveStatus(c.status));
+ const filteredContracts=contractStatusFilter==="ativos"?activeContracts:inactiveContracts;
+
+ const btnA=document.getElementById("contractFilterAtivos");
+ const btnI=document.getElementById("contractFilterInativos");
+ if(btnA&&btnI){
+  btnA.classList.toggle("active",contractStatusFilter==="ativos");
+  btnI.classList.toggle("active",contractStatusFilter==="inativos");
+ }
+ const countA=document.getElementById("contractCountAtivos");
+ if(countA) countA.textContent=activeContracts.length;
+
+ const total=filteredContracts.reduce((s,c)=>s+contractBookingYear(c,year),0);
+ const mrr=filteredContracts.filter(c=>isContractActiveStatus(c.status)).reduce((s,c)=>s+Number(c.monthly),0);
+ document.getElementById("contractKpis").innerHTML=
+  kpi(contractStatusFilter==="ativos"?"Booking ativo anual":"Booking inativo anual",money(total),`Registrado em ${year}`)+
+  kpi("MRR ativo",money(mrr),"Assinatura mensal ativa")+
+  kpi(contractStatusFilter==="ativos"?"Contratos ativos":"Contratos inativos",filteredContracts.length,contractStatusFilter==="ativos"?"Ativos + onboarding":"Pausados, inativos e encerrados")+
+  kpi("Ticket médio",money((filteredContracts.reduce((s,c)=>s+Number(c.monthly||0),0))/(filteredContracts.length||1)),"Média mensal");
+
+ document.getElementById("contractsList").innerHTML=filteredContracts.map(c=>`<div class="card" style="margin-bottom:12px">
+   <div class="section-head">
+     <div style="width:100%">
+       <span class="edit-label">Nome do cliente no contrato</span>
+       <input class="inline-edit" value="${escapeAttr(c.client)}" onchange="updateContractField(${c.id},'client',this.value)">
+       <p>${c.duration} meses · pagamento dia ${c.payDay}</p>
+     </div>
+     <span class="pill ${isContractActiveStatus(c.status)?"green":"black"}">${c.status}</span>
+   </div>
+   <div class="grid kpis">
+     <div class="card">
+       <label>Mensalidade</label>
+       <input class="inline-edit" type="number" value="${c.monthly||0}" onchange="updateContractField(${c.id},'monthly',this.value)">
+       <span>Atualiza booking e financeiro</span>
+     </div>
+     <div class="card">
+       <label>Dia de pagamento</label>
+       <input class="inline-edit" type="number" min="1" max="31" value="${c.payDay||1}" onchange="updateContractField(${c.id},'payDay',this.value)">
+       <span>Atrelado ao financeiro</span>
+     </div>
+     <div class="card">
+       <label>Status</label>
+       <select class="inline-edit" onchange="updateContractField(${c.id},'status',this.value)">
+         <option ${c.status==="Ativo"?"selected":""}>Ativo</option>
+         <option ${c.status==="Em onboarding"?"selected":""}>Em onboarding</option>
+         <option ${c.status==="Pausado"?"selected":""}>Pausado</option>
+         <option ${c.status==="Inativo"?"selected":""}>Inativo</option>
+         <option ${c.status==="Encerrado"?"selected":""}>Encerrado</option>
+         <option ${c.status==="Em negociação"?"selected":""}>Em negociação</option>
+       </select>
+       <span>Ativo ou inativo</span>
+     </div>
+     <div class="card">
+       <label>Booking ${year}</label>
+       <strong>${money(contractBookingYear(c,year))}</strong>
+       <span>${money(c.monthly*c.duration)} no ciclo completo</span>
+     </div>
+   </div>
+   <div class="scenario" style="margin-top:12px"><b>Contratado</b><p class="muted">${c.scope}</p></div>
+  </div>`).join("") || `<div class="card"><h3>Nenhum contrato neste grupo</h3><p class="muted">Troque o filtro ou cadastre um novo contrato.</p></div>`;
+
+ document.getElementById("yearLabel").textContent=year;
+ document.getElementById("bookingMonths").innerHTML=months.map((m,i)=>{
+  let active=filteredContracts.filter(c=>contractMonths(c).some(x=>x.year===year&&x.month===i));
+  let total=active.reduce((s,c)=>s+Number(c.monthly),0);
+  return `<div class="month"><h5>${m}</h5><b>${money(total)}</b><div class="mini" style="color:#aaa">${active.length} contrato(s)</div>${active.map(c=>`<div class="month-item">${c.client}<br><b>${money(c.monthly)}</b></div>`).join("")}</div>`;
+ }).join("");
+}
+function updateContractField(id,field,value){
+ const c=data.contracts.find(x=>x.id===id);
+ if(!c)return;
+ if(field==="monthly") value=Number(value||0);
+ if(field==="payDay") value=Number(value||1);
+ if(field==="duration") value=Number(value||1);
+ const oldName=c.client;
+ c[field]=value;
+
+ if(field==="client"){
+  data.clients.forEach(cl=>{if(cl.name===oldName)cl.name=value});
+  data.finance.forEach(f=>{if(f.desc===oldName)f.desc=value});
+  data.contents.forEach(co=>{if(co.client===oldName)co.client=value});
+ }
+
+ if(field==="monthly"){
+  data.clients.forEach(cl=>{if(cl.name===c.client)cl.value=value});
+  data.finance.forEach(f=>{if(f.desc===c.client&&f.type==="Entrada")f.value=value});
+ }
+
+ if(field==="payDay"){
+  data.clients.forEach(cl=>{if(cl.name===c.client)cl.payDay=value});
+  data.finance.forEach(f=>{
+   if(f.desc===c.client&&f.type==="Entrada"){
+    const parts=String(f.date||"2026-01-01").split("-");
+    const yy=parts[0]||"2026";
+    const mm=parts[1]||"01";
+    f.date=`${yy}-${mm}-${String(value).padStart(2,"0")}`;
+   }
+  });
+ }
+
+ if(field==="status"){
+  data.clients.forEach(cl=>{if(cl.name===c.client)cl.status=(isContractActiveStatus(value)?"Ativo":"Inativo")});
+  if(!isContractActiveStatus(value)){
+   data.finance=data.finance.filter(f=>!(f.type==="Entrada" && f.desc===c.client));
+  }else{
+   let fin=data.finance.find(f=>f.type==="Entrada" && f.desc===c.client);
+   if(!fin){
+    data.finance.push({id:Date.now()+Math.floor(Math.random()*9999),type:"Entrada",desc:c.client,value:c.monthly,date:`2026-01-${String(c.payDay||1).padStart(2,"0")}`,status:"Previsto"});
+   }
+  }
+ }
+
+ normalizeData();
+ removeInactiveEntriesFromFinance();syncActiveClientsToFinance();save();renderAll();
+}
+function setYear(y){year=y;renderContracts();renderDashboard();renderReports()}
+
+
+function setFinanceMonth(m){
+ financeMonth=m;
+ renderFinance();
+}
+function financeEntryMonth(f){
+ const parts=String(f.date||"").split("-");
+ if(parts.length>=2) return Number(parts[1])-1;
+ return 0;
+}
+function renderFinance(){
+ syncActiveClientsToFinance();
+ const monthBar=document.getElementById("financeMonthBar");
+ if(monthBar){
+  monthBar.innerHTML=months.map((m,i)=>`<button class="month-btn ${financeMonth===i?"active":""}" onclick="setFinanceMonth(${i})">${m}</button>`).join("");
+ }
+
+ const activeEntries=data.finance.filter(f=>
+  f.type==="Entrada" &&
+  isPayingClientName(f.desc) &&
+  financeEntryMonth(f)===financeMonth
+ );
+
+ const expenses=data.finance.filter(f=>
+  f.type==="Saída" &&
+  financeEntryMonth(f)===financeMonth
+ );
+
+ const ins=activeEntries.reduce((s,f)=>s+Number(f.value||0),0);
+ const received=activeEntries.filter(f=>f.status==="Pago").reduce((s,f)=>s+Number(f.value||0),0);
+ const pending=activeEntries.filter(f=>f.status!=="Pago").reduce((s,f)=>s+Number(f.value||0),0);
+ const outs=expenses.reduce((s,f)=>s+Number(f.value||0),0);
+ const activeClientsInMonth=activeEntries.length;
+
+ document.getElementById("financeKpis").innerHTML=
+  kpi("Recebido",money(received),`Entradas pagas em ${months[financeMonth]}`)+
+  kpi("Falta receber",money(pending),"Somente clientes ativos/onboarding")+
+  kpi("Clientes no caixa",activeClientsInMonth,"Inativos fora do financeiro")+
+  kpi("Saldo após saídas",money(ins-outs),"Entradas ativas menos saídas");
+
+ const entryRows=[...activeEntries].sort((a,b)=>String(a.desc).localeCompare(String(b.desc)));
+ const expenseRows=[...expenses].sort((a,b)=>String(a.desc).localeCompare(String(b.desc)));
+ const monthNote = "O financeiro só puxa clientes marcados como Ativo ou Em onboarding em Clientes ou Contratos.";
+
+ document.getElementById("financeTable").innerHTML=
+  `<tr><th colspan="5" style="font-size:16px;color:#111827;padding:10px">Entradas de clientes ativos em ${months[financeMonth]}<br><span style="font-size:12px;color:#71717a">${monthNote}</span></th></tr>`+
+  `<tr><th>Tipo</th><th>Cliente</th><th>Data</th><th>Valor</th><th>Status</th></tr>`+
+  (entryRows.length?entryRows.map(f=>`<tr>
+   <td>${f.type}</td>
+   <td><input class="inline-edit" value="${escapeAttr(f.desc)}" onchange="updateFinanceField(${f.id},'desc',this.value)"></td>
+   <td>${f.date}</td>
+   <td><input class="inline-edit" type="number" value="${f.value||0}" onchange="updateFinanceField(${f.id},'value',this.value)"></td>
+   <td><select class="inline-edit" onchange="updateFinanceField(${f.id},'status',this.value)">
+     <option ${f.status==="Previsto"?"selected":""}>Previsto</option>
+     <option ${f.status==="Pago"?"selected":""}>Pago</option>
+     <option ${f.status==="Pendente"?"selected":""}>Pendente</option>
+   </select></td>
+  </tr>`).join(""):`<tr><td colspan="5">Nenhuma entrada de cliente ativo neste mês.</td></tr>`)+
+  `<tr><th colspan="5" style="font-size:16px;color:#111827;padding:18px 10px 10px">Saídas do mês</th></tr>`+
+  `<tr><th>Tipo</th><th>Descrição</th><th>Data</th><th>Valor</th><th>Status</th></tr>`+
+  (expenseRows.length?expenseRows.map(f=>`<tr>
+   <td>${f.type}</td>
+   <td><input class="inline-edit" value="${escapeAttr(f.desc)}" onchange="updateFinanceField(${f.id},'desc',this.value)"></td>
+   <td>${f.date}</td>
+   <td><input class="inline-edit" type="number" value="${f.value||0}" onchange="updateFinanceField(${f.id},'value',this.value)"></td>
+   <td><select class="inline-edit" onchange="updateFinanceField(${f.id},'status',this.value)">
+     <option ${f.status==="Previsto"?"selected":""}>Previsto</option>
+     <option ${f.status==="Pago"?"selected":""}>Pago</option>
+     <option ${f.status==="Pendente"?"selected":""}>Pendente</option>
+   </select></td>
+  </tr>`).join(""):`<tr><td colspan="5">Nenhuma saída neste mês.</td></tr>`);
+}
+function updateFinanceField(id,field,value){
+ const f=data.finance.find(x=>x.id===id);
+ if(!f)return;
+ if(field==="value") value=Number(value||0);
+ const oldName=f.desc;
+ if(f.type==="Entrada" && field==="desc" && !isPayingClientName(value)){
+  alert("Este cliente não está ativo/onboarding em Clientes ou Contratos, então não pode entrar no financeiro.");
+  renderFinance();
+  return;
+ }
+ f[field]=value;
+ if(f.type==="Entrada"){
+  if(field==="desc"){
+   data.clients.forEach(c=>{if(c.name===oldName)c.name=value});
+   data.contracts.forEach(c=>{if(c.client===oldName)c.client=value});
+   data.contents.forEach(c=>{if(c.client===oldName)c.client=value});
+  }
+  if(field==="value"){
+   data.clients.forEach(c=>{if(c.name===f.desc)c.value=value});
+   data.contracts.forEach(c=>{if(c.client===f.desc)c.monthly=value});
+  }
+ }
+ normalizeData();
+ syncActiveClientsToFinance();
+ save();renderAll();
+}
+
+function renderOperation(){
+ document.getElementById("taskList").innerHTML=data.tasks.map(t=>`<div class="task-card"><b>${t.title}</b><div class="mini">${t.client} · ${t.resp} · ${t.due}</div><div class="actions" style="margin-top:8px"><span class="pill blue">${t.status}</span><span class="pill">${t.priority}</span></div></div>`).join("");
+ let e=data.employees[selectedEmployee]||data.employees[0];
+ document.getElementById("employeeProfile").innerHTML=`<div class="employee-profile"><h2>${e.name}</h2><p style="color:#ddd">${e.role}</p><div class="grid kpis" style="grid-template-columns:repeat(3,1fr);gap:10px"><div><b>${e.effort}%</b><br><small>Empenho</small></div><div><b>${e.feedbacks}</b><br><small>Feedbacks</small></div><div><b>${e.improvements}</b><br><small>Melhorias</small></div></div>${Object.entries(e.skills).map(([k,v])=>`<div class="skill"><span>${k}</span><div class="bar-bg"><div class="bar-fill" style="width:${v}%"></div></div></div>`).join("")}<p style="color:#ddd">${e.notes}</p><div class="actions">${data.employees.map((x,i)=>`<button class="small ${i===selectedEmployee?"yellow":""}" onclick="selectedEmployee=${i};renderOperation()">${x.name}</button>`).join("")}</div></div>`;
+}
+
+function renderEmployees(){
+ document.getElementById("employeesGrid").innerHTML=data.employees.map((e,i)=>`<div class="card"><h3>${e.name}</h3><p class="muted">${e.role}</p><strong>${money(e.cost)}</strong><span>Custo mensal</span><div style="margin-top:12px"><span class="pill">${e.effort}% empenho</span> <span class="pill green">${e.improvements} melhorias</span></div><p class="muted">${e.notes}</p><button class="btn black" onclick="selectedEmployee=${i};goById('operacao')">Ver perfil</button></div>`).join("");
+}
+
+function renderReports(){
+ const booking=data.contracts.reduce((s,c)=>s+contractBookingYear(c,year),0);
+ const feedbacks=data.employees.reduce((s,e)=>s+e.feedbacks,0);
+ document.getElementById("reportKpis").innerHTML=
+  kpi("Booking",money(booking),year)+
+  kpi("Conteúdos",data.contents.length,"No calendário")+
+  kpi("Feedbacks",feedbacks,"Recebidos pela equipe")+
+  kpi("Melhorias",data.employees.reduce((s,e)=>s+e.improvements,0),"Aplicadas");
+ document.getElementById("topClients").innerHTML=data.contracts.map(c=>`<div style="display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #eee"><span>${c.client}</span><b>${money(c.monthly*c.duration)}</b></div>`).join("");
+ document.getElementById("operationReport").innerHTML=data.employees.map(e=>`<div style="display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #eee"><span>${e.name}</span><b>${e.effort}%</b></div>`).join("");
+}
+
+function openModal(type){
+ const box=document.getElementById("modalBox");
+ const forms={
+  client:`<h2>Novo cliente</h2><div class="two"><div class="field"><label>Nome do cliente</label><input id="mClientName"></div><div class="field"><label>Segmento</label><input id="mClientSegment"></div></div><div class="two"><div class="field"><label>Mensalidade</label><input id="mClientValue" type="number"></div><div class="field"><label>Duração do contrato em meses</label><input id="mClientDuration" type="number" min="1" value="6"></div></div><div class="two"><div class="field"><label>Dia de pagamento</label><input id="mClientPay" type="number"></div><div class="two"><div class="field"><label>Responsável</label><select id="mClientResp"><option>Eduardo</option><option>Alice</option><option>Comercial</option><option>Design</option></select></div><div class="field"><label>Status</label><select id="mClientStatus"><option>Ativo</option><option>Em onboarding</option><option>Pausado</option><option>Encerrado</option></select></div></div><div class="field"><label>Cenário atual</label><textarea id="mClientScenario" placeholder="Ex: Cliente ativo, precisa melhorar presença no LinkedIn, campanha mensal em andamento..."></textarea></div><div class="field"><label>O que contratou</label><textarea id="mClientContracted" placeholder="Ex: Social Media, Stories, Site, Campanhas, Relatórios"></textarea></div><div class="actions"><button class="btn" onclick="saveClient()">Salvar cliente</button><button class="btn white" onclick="closeModal()">Cancelar</button></div>`,
+  lead:`<h2>Novo lead / cliente no CRM</h2><div class="two"><div class="field"><label>Nome</label><input id="mName"></div><div class="field"><label>Valor mensal</label><input id="mValue" type="number"></div></div><div class="two"><div class="field"><label>Dia de pagamento</label><input id="mPay" type="number"></div><div class="field"><label>Etapa</label><select id="mStage"><option>Novo Lead</option><option>Em conversa</option><option>Reunião marcada</option><option>Proposta enviada</option><option>Fechado</option></select></div></div><div class="field"><label>Próxima ação</label><input id="mNext"></div><div class="actions"><button class="btn" onclick="saveLead()">Salvar</button><button class="btn white" onclick="closeModal()">Cancelar</button></div>`,
+  contract:`<h2>Novo contrato</h2><div class="two"><div class="field"><label>Cliente</label><input id="mClient"></div><div class="field"><label>Mensalidade</label><input id="mMonthly" type="number"></div></div><div class="two"><div class="field"><label>Início</label><input id="mStart" type="date"></div><div class="field"><label>Duração em meses</label><input id="mDuration" type="number"></div></div><div class="two"><div class="field"><label>Dia de pagamento</label><input id="mCPay" type="number"></div><div class="field"><label>Responsável</label><select id="mResp"><option>Eduardo</option><option>Alice</option><option>Comercial</option><option>Design</option></select></div></div><div class="field"><label>O que foi contratado</label><textarea id="mScope"></textarea></div><div class="actions"><button class="btn" onclick="saveContract()">Salvar contrato</button><button class="btn white" onclick="closeModal()">Cancelar</button></div>`,
+  content:`<h2>Novo conteúdo</h2><div class="two"><div class="field"><label>Cliente ativo/onboarding</label><input id="mContentClient" list="activeClientOptions" placeholder="Digite ou escolha um cliente ativo"><datalist id="activeClientOptions"></datalist></div><div class="field"><label>Dia do mês</label><input id="mDay" type="number"></div></div><div class="two"><div class="field"><label>Horário</label><input id="mTime" value="09:00"></div><div class="field"><label>Canal</label><select id="mChannel"><option>Instagram</option><option>Facebook</option><option>Google</option><option>Pinterest</option><option>LinkedIn</option></select></div></div><div class="two"><div class="field"><label>Formato</label><select id="mFormat"><option>Feed</option><option>Stories</option><option>Reels</option><option>Destaques</option><option>Blog</option><option>Campanha</option></select></div><div class="field"><label>Responsável</label><select id="mContentResp"><option>Alice</option><option>Eduardo</option><option>Design</option><option>Comercial</option></select></div></div><div class="field"><label>Tema</label><input id="mTheme"></div><div class="actions"><button class="btn" onclick="saveContent()">Salvar conteúdo</button><button class="btn white" onclick="closeModal()">Cancelar</button></div>`,
+  finance:`<h2>Novo lançamento financeiro</h2><div class="two"><div class="field"><label>Tipo</label><select id="mFType"><option>Entrada</option><option>Saída</option></select></div><div class="field"><label>Valor</label><input id="mFValue" type="number"></div></div><div class="two"><div class="field"><label>Data</label><input id="mFDate" type="date"></div><div class="field"><label>Status</label><select id="mFStatus"><option>Previsto</option><option>Pago</option><option>Pendente</option></select></div></div><div class="field"><label>Descrição</label><input id="mFDesc"></div><div class="actions"><button class="btn" onclick="saveFinance()">Salvar</button><button class="btn white" onclick="closeModal()">Cancelar</button></div>`,
+  task:`<h2>Nova tarefa</h2><div class="field"><label>Título</label><input id="mTaskTitle"></div><div class="two"><div class="field"><label>Cliente</label><input id="mTaskClient"></div><div class="field"><label>Responsável</label><select id="mTaskResp"><option>Alice</option><option>Eduardo</option><option>Design</option><option>Comercial</option></select></div></div><div class="two"><div class="field"><label>Prazo</label><input id="mTaskDue"></div><div class="field"><label>Prioridade</label><select id="mTaskPriority"><option>Alta</option><option>Média</option><option>Baixa</option></select></div></div><div class="actions"><button class="btn" onclick="saveTask()">Salvar tarefa</button><button class="btn white" onclick="closeModal()">Cancelar</button></div>`,
+  employee:`<h2>Novo funcionário</h2><div class="two"><div class="field"><label>Nome</label><input id="mEName"></div><div class="field"><label>Função</label><input id="mERole"></div></div><div class="two"><div class="field"><label>Custo mensal</label><input id="mECost" type="number"></div><div class="field"><label>Empenho %</label><input id="mEEffort" type="number"></div></div><div class="field"><label>Observações</label><textarea id="mENotes"></textarea></div><div class="actions"><button class="btn" onclick="saveEmployee()">Salvar funcionário</button><button class="btn white" onclick="closeModal()">Cancelar</button></div>`
+ };
+ box.innerHTML=forms[type];
+ if(type==="content"){
+  const dl=document.getElementById("activeClientOptions");
+  if(dl){
+   dl.innerHTML=data.clients.filter(c=>isClientActiveStatus(c.status)).map(c=>`<option value="${escapeAttr(c.name)}"></option>`).join("");
+  }
+ }
+ document.getElementById("modal").classList.add("open");
+}
+function closeModal(){document.getElementById("modal").classList.remove("open")}
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+
+
+function saveClient(){
+ const newId=Date.now();
+ data.clients.push({
+  id:newId,
+  name:mClientName.value||"Novo cliente",
+  segment:mClientSegment.value||"Segmento não informado",
+  value:Number(mClientValue.value||0),
+  payDay:Number(mClientPay.value||1),
+  duration:Number((typeof mClientDuration!=="undefined"?mClientDuration.value:1)||1),
+  status:mClientStatus.value||"Ativo",
+  resp:mClientResp.value||"Eduardo",
+  scenario:mClientScenario.value||"Cenário ainda não registrado.",
+  contracted:(mClientContracted.value||"Escopo não informado").split(",").map(x=>x.trim()).filter(Boolean)
+ });
+ data.finance.push({id:newId+1,type:"Entrada",desc:mClientName.value||"Novo cliente",value:Number(mClientValue.value||0),date:"2026-01-"+String(Number(mClientPay.value||1)).padStart(2,"0"),status:"Previsto"});
+ normalizeData();
+ save();closeModal();renderAll();
+}
+
+function saveLead(){data.leads.push({id:Date.now(),name:mName.value||"Novo lead",stage:mStage.value,value:Number(mValue.value||0),payDay:Number(mPay.value||1),origin:"Manual",resp:"Eduardo",next:mNext.value||"Follow-up"});save();closeModal();renderAll()}
+function saveContract(){
+ data.contracts.push({id:Date.now(),client:mClient.value||"Novo cliente",monthly:Number(mMonthly.value||0),start:mStart.value||"2026-01-01",duration:Number(mDuration.value||1),payDay:Number(mCPay.value||1),status:"Ativo",resp:mResp.value,scope:mScope.value||"Escopo contratado"});
+ normalizeData();
+ save();closeModal();renderAll();
+}
+function saveContent(){
+ const clientName=mContentClient.value||"Cliente";
+ const c=data.clients.find(x=>x.name===clientName);
+ if(!c || !isClientActiveStatus(c.status)){
+  alert("A agenda editorial aceita somente clientes com status Ativo ou Em onboarding.");
+  return;
+ }
+ data.contents.push({id:Date.now(),client:clientName,day:Number(mDay.value||1),time:mTime.value||"09:00",channel:mChannel.value,format:mFormat.value,resp:mContentResp.value,status:"Planejado",theme:mTheme.value||"Tema"});
+ save();closeModal();renderAll();
+}
+function saveFinance(){
+ if(mFType.value==="Entrada" && !isPayingClientName(mFDesc.value)){
+  alert("Entradas financeiras só podem ser vinculadas a clientes ativos ou em onboarding.");
+  return;
+ }
+ data.finance.push({id:Date.now(),type:mFType.value,desc:mFDesc.value||"Lançamento",value:Number(mFValue.value||0),date:mFDate.value||"2026-01-01",status:mFStatus.value});
+ normalizeData();
+ syncActiveClientsToFinance();
+ save();closeModal();renderAll();
+}
+function saveEmployee(){data.employees.push({id:Date.now(),name:mEName.value||"Novo funcionário",role:mERole.value||"Equipe",cost:Number(mECost.value||0),effort:Number(mEEffort.value||80),feedbacks:0,improvements:0,skills:{Design:70,Copy:70,Operação:70},notes:mENotes.value||"Perfil em construção."});save();closeModal();renderAll()}
+
+seedMayFinance();
+normalizeData();
+syncActiveClientsToFinance();
+save();
+renderAll();
+setInterval(()=>{try{normalizeData();syncActiveClientsToFinance();save()}catch(e){}},30000);
+</script>
+</body>
+</html>
